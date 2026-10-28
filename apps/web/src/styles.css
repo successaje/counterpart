@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "@counterpart/ui/theme.css";
+@source "../../../packages/ui/src";
+
+@utility prose-measure {
+  max-width: 62ch;
+}
