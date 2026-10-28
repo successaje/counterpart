@@ -18,6 +18,7 @@ describe('detectProject', () => {
     expect(d.configPaths).toContain('.env');
     expect(d.configPaths).toContain('config/**');
     expect(d.configPaths).not.toContain('pyproject.toml');
+    expect(d.configPaths).not.toContain('vite.config.*');
     expect(d.dependencies).toContain('cachekit');
     const config = proposeConfig('@acme/Sample App', d);
     expect(config.project.name).toBe('sample-app');

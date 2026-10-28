@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { MenuEntry, RunnerConfig } from '@counterpart/protocol';
+import { glob } from 'tinyglobby';
 import { exists } from './paths.js';
 
 /**
@@ -160,10 +161,20 @@ export async function detectProject(root: string): Promise<Detection> {
     });
   }
 
+  // Only propose paths that exist today; the owner can widen the list by hand.
   const configPaths: string[] = [];
   for (const candidate of COMMON_CONFIG) {
-    const literal = !candidate.includes('*');
-    if (literal ? await exists(path.join(root, candidate)) : true) configPaths.push(candidate);
+    const present = candidate.includes('*')
+      ? (
+          await glob(candidate, {
+            cwd: root,
+            dot: true,
+            onlyFiles: true,
+            ignore: ['**/node_modules/**'],
+          })
+        ).length > 0
+      : await exists(path.join(root, candidate));
+    if (present) configPaths.push(candidate);
   }
 
   if (menu.length === 0) {
