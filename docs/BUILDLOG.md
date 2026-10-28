@@ -13,4 +13,5 @@ Milestones, newest last. Dates are in IST.
 | 2026-10-28 | Example projects: cachekit 3.2.0, cachekit-s3 with the path bug, sample-app with runner.yaml. Runner fix for E6 in monorepos. (PR #6) |
 | 2026-10-28 | Public site with a live demo of one request; GitHub Pages workflow. (PR #7) |
 | 2026-10-28 | README, contributing guide, demo script, architecture update. (PR #8) |
+| 2026-10-28 | Visualisation: the loop drawn and animated on the site; Ledger overview (outcomes, redactions, evidence types) and case timeline in the Desk; StackedBar, BarList and Timeline in the design system. (PR #9) |
 | 2026-11-04 | Hackathon window opens: Switch server, agents, room template, evidence-protocol document. |

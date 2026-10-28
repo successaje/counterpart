@@ -41,6 +41,12 @@ coding agent ──MCP──▶ counterpart runner   dev-agent ◀────�
                       └─ ledger ──▶ Desk (127.0.0.1)
 ```
 
+<p align="center">
+  <img src="docs/images/flow.jpg" width="880" alt="The same loop drawn: a request travels from the Switch room into the runner on your machine, waits at the gate for the Desk, is collected and redacted, returns to the room as a release, and is reproduced on the project's machine" />
+</p>
+
+The site animates this drawing: one request moving between the three machines, with the room's messages appearing as it goes.
+
 1. The reporter's agent opens a case in the room where the project's helpdesk lives.
 2. The helpdesk asks for evidence by name: "E3 `test` with the verbose flag".
 3. The agent calls `counterpart_collect`. The runner validates the request against the menu, records it, and waits for the owner. The Desk shows exactly what will run.
@@ -127,6 +133,15 @@ The room template (`switch/`), the two agents' instructions and the self-hosted 
 
 <p align="center">
   <img src="docs/images/desk-record.jpg" width="880" alt="A released record with the raw output that stayed on the machine next to the redacted output that left" />
+</p>
+
+The Ledger opens with where every request ended up, what was redacted, and which evidence types were used; a case shows the same split under its progress and a timeline of every request, decision, release and state change.
+
+<p align="center">
+  <img src="docs/images/desk-ledger.jpg" width="880" alt="The Ledger: requests split by outcome, redactions by kind, requests by evidence type, then the list of records" />
+</p>
+<p align="center">
+  <img src="docs/images/desk-timeline.jpg" width="880" alt="A case timeline: case opened, asked for E1 versions, allowed automatically by policy, released, and so on, with the moments something left the machine marked" />
 </p>
 
 ## Development
