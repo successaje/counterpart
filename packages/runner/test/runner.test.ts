@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { token } from '@counterpart/protocol';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -257,6 +257,38 @@ describe('E6 apply-fix', () => {
     expect(r.release.released.applied).toBe(true);
     expect(r.release.released.verify?.output.stdout.trim()).toBe('hello, counterpart');
     expect(await readFile(path.join(fx.root, 'greeting.txt'), 'utf8')).toBe('hello, counterpart\n');
+  });
+
+  it('applies a project-relative patch when the project is a subdirectory of the repository', async () => {
+    const sub = path.join(fx.root, 'packages', 'inner');
+    await mkdir(path.join(sub, '.counterpart'), { recursive: true });
+    await cp(
+      path.join(fx.root, '.counterpart', 'runner.yaml'),
+      path.join(sub, '.counterpart', 'runner.yaml'),
+    );
+    await writeFile(path.join(sub, 'greeting.txt'), 'hello world\n');
+    await writeFile(path.join(sub, 'leak.sh'), 'exit 0\n');
+    const inner = await Runner.open(sub);
+    try {
+      const c = await inner.openCase({ summary: 'monorepo' });
+      const pending = await inner.collect(
+        ask(c.id, 'apply-fix', {
+          patch: GREETING_PATCH,
+          verifyWith: 'greet',
+          description: 'update greeting',
+        }),
+        10,
+      );
+      if (pending.status !== 'pending') throw new Error('unexpected');
+      const r = await inner.decide(pending.recordId, { decision: 'allowed-once', via: 'desk' });
+      if (r.status !== 'released' || r.release.released?.type !== 'apply-fix')
+        throw new Error('unexpected');
+      expect(r.release.released.applied).toBe(true);
+      expect(await readFile(path.join(sub, 'greeting.txt'), 'utf8')).toBe('hello, counterpart\n');
+      expect(await readFile(path.join(fx.root, 'greeting.txt'), 'utf8')).toBe('hello world\n');
+    } finally {
+      inner.close();
+    }
   });
 
   it('reports a patch that does not apply instead of failing', async () => {
