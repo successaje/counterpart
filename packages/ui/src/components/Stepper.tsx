@@ -20,7 +20,10 @@ export interface StepperProps {
 export function Stepper({ steps, current, aside, className }: StepperProps) {
   const idx = steps.findIndex((s) => s.id === current);
   return (
-    <ol className={clsx('flex items-center gap-1 sm:gap-2', className)} aria-label="Case progress">
+    <ol
+      className={clsx('flex flex-wrap items-center gap-x-1 gap-y-2 sm:gap-x-2', className)}
+      aria-label="Case progress"
+    >
       {steps.map((s, i) => {
         const done = idx > i;
         const active = idx === i;
@@ -46,7 +49,7 @@ export function Stepper({ steps, current, aside, className }: StepperProps) {
             />
             <span
               className={clsx(
-                'truncate text-xs',
+                'whitespace-nowrap text-xs',
                 active ? 'font-medium text-ink' : done ? 'text-ink-muted' : 'text-ink-faint',
                 !near && 'hidden sm:inline',
               )}
