@@ -1,11 +1,13 @@
 import {
   CASE_STATE_LABEL,
   type Case,
+  describeApproval,
+  draftEvidenceCard,
   EVIDENCE_INFO,
-  type EvidenceCard,
-  evidenceInfo,
   type Payload,
   type Release,
+  redactionSummary,
+  releaseHeadline,
 } from '@counterpart/protocol';
 import type { CollectResult, RunnerInfo } from '@counterpart/runner';
 
@@ -13,31 +15,6 @@ import type { CollectResult, RunnerInfo } from '@counterpart/runner';
  * Plain-text renderings for the MCP tools. The agent reads these; the Desk
  * renders the same objects as a UI.
  */
-
-export function describeApproval(r: Release): string {
-  const a = r.approval;
-  if (!a) return 'no approval recorded';
-  switch (a.decision) {
-    case 'automatic':
-      return 'automatic by policy';
-    case 'allowed-once':
-      return `allowed once by the owner via ${a.via}`;
-    case 'allowed-for-case':
-      return a.via === 'case-trust'
-        ? 'trusted for this case by the owner'
-        : `allowed for this case by the owner via ${a.via}`;
-    case 'declined':
-      return `declined by the owner via ${a.via}`;
-    case 'expired':
-      return 'expired without a decision';
-  }
-}
-
-export function redactionSummary(r: Release): string {
-  const counts = r.redaction?.counts ?? {};
-  const parts = Object.entries(counts).map(([k, v]) => `${v} ${k}`);
-  return parts.length ? `redacted: ${parts.join(', ')}` : 'nothing needed redacting';
-}
 
 function outputBlock(o: {
   stdout: string;
@@ -101,18 +78,6 @@ export function payloadText(p: Payload): string {
           : 'verification: not run',
       ].join('\n');
   }
-}
-
-export function releaseHeadline(r: Release): string {
-  if (r.request.type === 'other') return `request refused`;
-  const info = EVIDENCE_INFO[r.request.type];
-  const what =
-    r.request.type === 'command'
-      ? `${info.code} command \`${r.request.args.name}\``
-      : r.request.type === 'apply-fix'
-        ? `${info.code} apply-fix (${r.request.args.description})`
-        : `${info.code} ${info.title.toLowerCase()}`;
-  return what;
 }
 
 export function collectResultText(result: CollectResult): string {
@@ -197,51 +162,4 @@ export function infoText(info: RunnerInfo): string {
     .join('\n');
 }
 
-/** Builds a draft evidence card from a case's releases. */
-export function draftCard(
-  c: Case,
-  releases: Release[],
-  overrides: Partial<Pick<EvidenceCard, 'title' | 'diagnosis' | 'fixTried' | 'confidence'>> = {},
-): EvidenceCard {
-  const env: string[] = [];
-  const approvals: string[] = [];
-  let reproduction = '';
-  for (const r of releases) {
-    if (r.status !== 'released' || !r.released) continue;
-    const p = r.released;
-    if (p.type === 'versions') {
-      const rt = Object.entries(p.runtime)
-        .map(([k, v]) => `${k} ${v}`)
-        .join(', ');
-      if (rt) env.push(rt);
-      if (p.packages.length) env.push(p.packages.map((x) => `${x.name} ${x.version}`).join(', '));
-      env.push(p.platform);
-    }
-    if (p.type === 'command') {
-      const tail = (p.output.stderr || p.output.stdout).trim().split('\n').slice(-3).join(' / ');
-      reproduction = `E3 ${p.name}${p.argv.length > 2 ? ' (verbose)' : ''}: exit ${p.output.exitCode ?? 'none'}${tail ? `; ${tail}` : ''}`;
-    }
-    if (p.type === 'repro') {
-      const tail = (p.output.stderr || p.output.stdout).trim().split('\n').slice(-3).join(' / ');
-      reproduction = `E4 script in ${p.sandbox}: exit ${p.output.exitCode ?? 'none'}${tail ? `; ${tail}` : ''}`;
-    }
-    if (r.approval && r.approval.decision !== 'automatic' && r.request.type !== 'other') {
-      const info = evidenceInfo(r.request.type);
-      approvals.push(
-        `${info.code} ${r.request.type} ${describeApproval(r)} at ${r.approval.decidedAt}`,
-      );
-    }
-  }
-  const card: EvidenceCard = {
-    caseId: c.id,
-    title: overrides.title ?? c.summary,
-    environment: env.length ? env : ['not collected yet'],
-    reproduction: reproduction || 'not reproduced yet',
-    confidence: overrides.confidence ?? 'unconfirmed',
-    approvals,
-    ...(overrides.diagnosis ? { diagnosis: overrides.diagnosis } : {}),
-    ...(overrides.fixTried ? { fixTried: overrides.fixTried } : {}),
-    ...(c.thread ? { thread: c.thread } : {}),
-  };
-  return card;
-}
+export { describeApproval, draftEvidenceCard as draftCard, redactionSummary, releaseHeadline };
