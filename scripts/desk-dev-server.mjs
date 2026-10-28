@@ -118,12 +118,14 @@ await writeFile(
   'provider: s3\nbucket: acme-internal-cache\nlocal: .cache/cachekit\n',
 );
 
+const deskDir = new URL('../apps/desk/dist/', import.meta.url).pathname;
 const conn = await connect(root, {
   startIfNeeded: true,
   port: Number(process.env.COUNTERPART_PORT ?? 4747),
   corsOrigins: ['http://localhost:5173'],
+  ...((await exists(`${deskDir}index.html`)) ? { deskDir } : {}),
 });
-if (!conn || conn.mode !== 'local') throw new Error('could not start a server');
+if (conn?.mode !== 'local') throw new Error('could not start a server');
 const h = conn.handle;
 const helpdesk = { kind: 'agent', name: 'cachekit-helpdesk', side: 'project' };
 const owner = { kind: 'human', name: os.userInfo().username, side: 'reporter' };
