@@ -1,0 +1,21 @@
+{
+  "name": "sample-app",
+  "version": "1.4.0",
+  "description": "The reporter's app in the Counterpart demo: upgraded cachekit to 3.2.0 and two tests broke.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "cachekit": "workspace:*",
+    "cachekit-s3": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "vitest": "^3.2.7"
+  }
+}

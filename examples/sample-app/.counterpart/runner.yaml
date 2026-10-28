@@ -1,0 +1,41 @@
+# Counterpart runner configuration.
+#
+# This file is the statement of what your agent may do for a project's
+# helpdesk. Everything a helpdesk can ask for is either on this menu or
+# refused. Commit it; it is part of how your project reports bugs.
+#
+# Docs: https://github.com/successaje/counterpart#runner-yaml
+
+version: 1
+project:
+  name: sample-app
+  reportsAgainst:
+    - cachekit
+    - cachekit-s3
+menu:
+  - name: test
+    description: Run the test suite
+    run: [pnpm, run, test]
+    verbose: ["--reporter=verbose"]
+    cwd: .
+  - name: build
+    description: Type-check the app
+    run: [pnpm, run, build]
+    verbose: []
+    cwd: .
+configPaths:
+  - .env
+  - config/*.yaml
+  - vitest.config.ts
+approvals: {}
+redaction:
+  rules: []
+  usernames: []
+  literals:
+    - acme-internal
+  keepRaw: true
+limits:
+  timeoutMs: 120000
+  maxLines: 200
+  maxBytes: 65536
+  approvalWaitMs: 600000

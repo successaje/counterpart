@@ -1,0 +1,14 @@
+diff --git a/src/cache.ts b/src/cache.ts
+--- a/src/cache.ts
++++ b/src/cache.ts
+@@ -12,7 +12,9 @@
+  * After the cachekit 3.2.0 upgrade the plugin no longer finds the index.
+  */
+ export function setupCache(root: string): AppCache {
+-  const cache = createCache({ root, ttlMs: 60_000 });
++  // cachekit-s3 0.4.1 still reads .cache/cachekit; pin the old directory until
++  // the plugin ships a fix. See https://github.com/acme/cachekit-s3/issues/... 
++  const cache = createCache({ root, ttlMs: 60_000, dir: '.cache/cachekit' });
+   const s3 = new CacheKitS3({ bucket: process.env.S3_BUCKET ?? 'local-dev-cache', root });
+   return { cache, s3 };
+ }

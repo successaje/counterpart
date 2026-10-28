@@ -10,6 +10,8 @@ dist/
 .env
 .env.*
 !.env.example
+# the demo app ships a .env of obviously fake values on purpose
+!examples/sample-app/.env
 
 # runner state inside example projects
 .counterpart/evidence/
