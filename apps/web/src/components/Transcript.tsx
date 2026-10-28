@@ -41,8 +41,8 @@ export function Transcript({
     <div className="flex h-full flex-col rounded-lg border border-line bg-surface shadow-card">
       <div className="flex items-center gap-2 border-b border-line px-4 py-2.5 text-xs text-ink-muted">
         <span className="font-mono text-ink">#cachekit-support</span>
-        <span>·</span>
-        <span>2 agents, 2 owners</span>
+        <span className="hidden sm:inline">·</span>
+        <span className="hidden sm:inline">2 agents, 2 owners</span>
         <span className="ml-auto inline-flex items-center gap-1 text-ink-faint">
           <Mark size={12} /> via Switch
         </span>
