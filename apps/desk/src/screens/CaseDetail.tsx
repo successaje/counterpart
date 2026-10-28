@@ -16,17 +16,21 @@ import {
   PrincipalChip,
   RelativeTime,
   Section,
+  type Segment,
   SkeletonLines,
+  StackedBar,
   Stepper,
+  Timeline,
 } from '@counterpart/ui';
 import { ArrowLeft, ExternalLink, ShieldOff } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { Link, useParams } from 'react-router';
 import { ApprovalCard } from '../components/ApprovalCard.js';
 import { CopyButton } from '../components/CopyButton.js';
 import { RecordCard } from '../components/RecordCard.js';
-import { selectRecords } from '../lib/state.js';
+import { selectOutcomes, selectRecords } from '../lib/state.js';
 import { useDesk } from '../lib/store.js';
+import { caseTimeline } from '../lib/timeline.js';
 import { Page } from './Page.js';
 
 const FLOW: CaseState[] = [
@@ -59,7 +63,19 @@ export function CaseDetail() {
   const records = selectRecords(state, id);
   const pending = records.filter((r) => r.status === 'pending' || r.status === 'collecting');
   const settled = records.filter((r) => r.status !== 'pending' && r.status !== 'collecting');
-  const [historyOpen, setHistoryOpen] = useState(false);
+  const timeline = useMemo(() => (c ? caseTimeline(c, records) : []), [c, records]);
+  const outcomes = selectOutcomes(records);
+  const redactions = records.reduce((n, r) => n + (r.redaction?.total ?? 0), 0);
+  const segments: Segment[] = [
+    { id: 'released', label: 'left this machine', value: outcomes.released, tone: 'accent' },
+    {
+      id: 'stayed',
+      label: 'stayed',
+      value: outcomes.declined + outcomes.refused + outcomes.other,
+      tone: 'danger',
+    },
+    { id: 'waiting', label: 'waiting for you', value: outcomes.waiting, tone: 'pending' },
+  ];
 
   if (!state.loaded) {
     return (
@@ -138,6 +154,21 @@ export function CaseDetail() {
           ) : null}
           {c.resolution ? <span className="text-ink">Resolution: {c.resolution}</span> : null}
         </div>
+        {records.length ? (
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-line pt-3">
+            <StackedBar
+              segments={segments}
+              size="sm"
+              className="min-w-56 flex-1"
+              aria-label={`${outcomes.released} of ${records.length} requests left this machine`}
+            />
+            <span className="text-xs text-ink-muted">
+              {redactions === 0
+                ? 'nothing redacted'
+                : `${redactions} redaction${redactions === 1 ? '' : 's'} before release`}
+            </span>
+          </div>
+        ) : null}
         {c.trusted.length ? (
           <div className="flex flex-wrap items-center gap-2 border-t border-line pt-3 text-sm">
             <span className="text-ink-muted">Trusted for this case:</span>
@@ -203,37 +234,12 @@ export function CaseDetail() {
       </Section>
 
       <Section
-        title="History"
-        actions={
-          <button
-            type="button"
-            onClick={() => setHistoryOpen((o) => !o)}
-            className="text-xs text-ink-muted hover:text-ink"
-          >
-            {historyOpen ? 'hide' : `show ${c.history.length}`}
-          </button>
-        }
+        title="Timeline"
+        description="Every request, decision, release and state change, oldest first."
       >
-        {historyOpen ? (
-          <ol className="space-y-1.5 text-sm">
-            {c.history.map((h) => (
-              <li key={h.at} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                <RelativeTime iso={h.at} className="w-20 shrink-0 text-xs text-ink-faint" />
-                <span className="text-ink">
-                  {h.from === h.to
-                    ? 'note'
-                    : `${CASE_STATE_LABEL[h.from]} → ${CASE_STATE_LABEL[h.to]}`}
-                </span>
-                <span className="text-xs text-ink-muted">by {h.by.name}</span>
-                {h.note ? <span className="text-ink-muted">· {h.note}</span> : null}
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className="text-sm text-ink-faint">
-            {c.history.length} transition{c.history.length === 1 ? '' : 's'}.
-          </p>
-        )}
+        <Card>
+          <Timeline entries={timeline} />
+        </Card>
       </Section>
     </Page>
   );

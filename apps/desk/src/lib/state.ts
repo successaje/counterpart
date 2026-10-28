@@ -1,4 +1,4 @@
-import type { Case, Release } from '@counterpart/protocol';
+import { type Case, EVIDENCE_INFO, EVIDENCE_TYPES, type Release } from '@counterpart/protocol';
 import type { DeskEvent, RunnerInfo } from './api.js';
 
 export type Connection = 'connecting' | 'live' | 'offline' | 'unauthorized';
@@ -142,4 +142,67 @@ export function selectTotals(records: Release[]): LedgerTotals {
     }
   }
   return t;
+}
+
+export interface TypeCount {
+  type: string;
+  code: string;
+  label: string;
+  total: number;
+  released: number;
+}
+
+/** Requests per evidence type, plus everything outside the menu, in menu order. */
+export function selectByType(records: readonly Release[]): TypeCount[] {
+  const rows: TypeCount[] = [
+    ...EVIDENCE_TYPES.map((t) => ({
+      type: t,
+      code: EVIDENCE_INFO[t].code,
+      label: EVIDENCE_INFO[t].title,
+      total: 0,
+      released: 0,
+    })),
+    { type: 'other', code: '—', label: 'Off the menu', total: 0, released: 0 },
+  ];
+  const byType = new Map(rows.map((r) => [r.type, r]));
+  for (const r of records) {
+    const row = byType.get(r.request.type);
+    if (!row) continue;
+    row.total++;
+    if (r.status === 'released') row.released++;
+  }
+  return rows;
+}
+
+export interface OutcomeSplit {
+  released: number;
+  declined: number;
+  refused: number;
+  other: number;
+  waiting: number;
+}
+
+/** Where every request to a case or project ended up, for a stacked bar. */
+export function selectOutcomes(records: readonly Release[]): OutcomeSplit {
+  const o: OutcomeSplit = { released: 0, declined: 0, refused: 0, other: 0, waiting: 0 };
+  for (const r of records) {
+    switch (r.status) {
+      case 'released':
+        o.released++;
+        break;
+      case 'declined':
+        o.declined++;
+        break;
+      case 'refused':
+        o.refused++;
+        break;
+      case 'pending':
+      case 'collecting':
+        o.waiting++;
+        break;
+      default:
+        o.other++;
+    }
+  }
+  return o;
 }

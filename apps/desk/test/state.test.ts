@@ -5,7 +5,9 @@ import {
   applyEvent,
   initialState,
   reduce,
+  selectByType,
   selectCases,
+  selectOutcomes,
   selectPending,
   selectTotals,
 } from '../src/lib/state.js';
@@ -105,5 +107,26 @@ describe('tokenFromInput', () => {
     expect(tokenFromInput('  abcDEF123_-abcDEF123_-xyz ')).toBe('abcDEF123_-abcDEF123_-xyz');
     expect(tokenFromInput('short')).toBeNull();
     expect(tokenFromInput('')).toBeNull();
+  });
+});
+
+describe('selectByType and selectOutcomes', () => {
+  it('count requests per evidence type and by where they ended up', () => {
+    const records = [
+      release('a', 'released'),
+      release('b', 'released'),
+      release('c', 'declined'),
+      release('d', 'pending'),
+    ];
+    const byType = selectByType(records);
+    expect(byType[0]).toMatchObject({ code: 'E1', total: 4, released: 2 });
+    expect(byType.at(-1)).toMatchObject({ type: 'other', total: 0 });
+    expect(selectOutcomes(records)).toEqual({
+      released: 2,
+      declined: 1,
+      refused: 0,
+      other: 0,
+      waiting: 1,
+    });
   });
 });
