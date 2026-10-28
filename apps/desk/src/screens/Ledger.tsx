@@ -1,10 +1,18 @@
 import { EVIDENCE_TYPES } from '@counterpart/protocol';
-import { Card, EmptyState, Input, Pill, SkeletonLines } from '@counterpart/ui';
+import {
+  BarList,
+  Card,
+  EmptyState,
+  Input,
+  type Segment,
+  SkeletonLines,
+  StackedBar,
+} from '@counterpart/ui';
 import { clsx } from 'clsx';
 import { BookOpen } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { RecordCard } from '../components/RecordCard.js';
-import { selectRecords, selectTotals } from '../lib/state.js';
+import { selectByType, selectOutcomes, selectRecords, selectTotals } from '../lib/state.js';
 import { useDesk } from '../lib/store.js';
 import { Page } from './Page.js';
 
@@ -20,6 +28,21 @@ export function Ledger() {
     [state],
   );
   const totals = useMemo(() => selectTotals(all), [all]);
+  const outcomes = useMemo(() => selectOutcomes(all), [all]);
+  const byType = useMemo(() => selectByType(all), [all]);
+  const redactionRows = useMemo(
+    () =>
+      Object.entries(totals.redactions)
+        .sort((a, b) => b[1] - a[1])
+        .map(([k, v]) => ({ id: k, label: k, value: v, tone: 'accent' as const })),
+    [totals],
+  );
+  const segments: Segment[] = [
+    { id: 'released', label: 'left this machine', value: outcomes.released, tone: 'accent' },
+    { id: 'declined', label: 'you declined', value: outcomes.declined, tone: 'danger' },
+    { id: 'refused', label: 'outside the menu', value: outcomes.refused, tone: 'pending' },
+    { id: 'other', label: 'failed or expired', value: outcomes.other, tone: 'neutral' },
+  ];
 
   const shown = all.filter((r) => {
     if (status !== 'all' && r.status !== status) return false;
@@ -45,19 +68,36 @@ export function Ledger() {
       title="Ledger"
       lede="Everything a helpdesk asked for, what you decided, and what left this machine."
     >
-      <div className="grid gap-3 sm:grid-cols-3">
-        <Stat label="Released" value={totals.released} tone="accent" />
-        <Stat label="Refused or declined" value={totals.refused + totals.declined} tone="danger" />
-        <Stat
-          label="Redactions"
-          value={totals.redactionTotal}
-          tone="neutral"
-          detail={
-            Object.entries(totals.redactions)
-              .map(([k, v]) => `${v} ${k}`)
-              .join(' · ') || 'none so far'
-          }
-        />
+      <div className="grid gap-3 md:grid-cols-3">
+        <Overview label="Requests" value={all.length} hint="decided so far">
+          <StackedBar segments={segments} aria-label={`${all.length} requests`} />
+        </Overview>
+        <Overview label="Redactions" value={totals.redactionTotal} hint="removed before release">
+          <BarList items={redactionRows} empty="Nothing has needed redacting." />
+        </Overview>
+        <Overview
+          label="By evidence type"
+          value={byType.filter((t) => t.type !== 'other' && t.total > 0).length}
+          hint="of 6 types used"
+        >
+          <BarList
+            items={byType
+              .filter((t) => t.total > 0)
+              .map((t) => ({
+                id: t.type,
+                label: (
+                  <span className="flex items-center gap-1.5">
+                    <span className="font-mono text-ink-faint">{t.code}</span>
+                    {t.label}
+                  </span>
+                ),
+                value: t.total,
+                tone: t.type === 'other' ? 'pending' : 'info',
+                hint: t.type === 'other' ? 'refused' : `· ${t.released} left`,
+              }))}
+            empty="No requests yet."
+          />
+        </Overview>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -132,27 +172,29 @@ export function Ledger() {
   );
 }
 
-function Stat({
+function Overview({
   label,
   value,
-  tone,
-  detail,
+  hint,
+  children,
 }: {
   label: string;
   value: number;
-  tone: 'accent' | 'danger' | 'neutral';
-  detail?: string;
+  hint: string;
+  children: React.ReactNode;
 }) {
   return (
-    <Card className="space-y-1">
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-ink-muted">{label}</span>
-        <Pill tone={tone} dot>
-          {tone === 'accent' ? 'left' : tone === 'danger' ? 'stayed' : 'removed'}
-        </Pill>
+    <Card className="flex flex-col gap-3">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="text-xs font-medium text-ink-muted">{label}</span>
+        <span className="flex items-baseline gap-1.5">
+          <span className="font-mono text-2xl font-medium tabular-nums leading-none text-ink">
+            {value}
+          </span>
+          <span className="text-2xs text-ink-faint">{hint}</span>
+        </span>
       </div>
-      <div className="font-mono text-2xl font-medium tabular-nums text-ink">{value}</div>
-      {detail ? <div className="truncate text-xs text-ink-faint">{detail}</div> : null}
+      {children}
     </Card>
   );
 }
