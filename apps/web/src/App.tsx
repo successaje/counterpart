@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Demo } from './components/Demo.js';
+import { Flow } from './components/Flow.js';
 import { HACKATHON, REPO, SWITCH } from './links.js';
 
 const NAV = [
@@ -167,47 +168,14 @@ function Section({
 }
 
 function How() {
-  const steps = [
-    {
-      n: '1',
-      title: 'Your agent opens a case in the room',
-      body: 'A room where the project’s helpdesk agent lives. Both agents have owners; both run on their owners’ machines. Switch is what lets them address each other.',
-    },
-    {
-      n: '2',
-      title: 'The helpdesk asks for evidence by name',
-      body: 'Versions, config, a command from your menu, a sandboxed script, the recent diff, a patch to try. It cannot ask for anything else, and your agent will not do anything else.',
-    },
-    {
-      n: '3',
-      title: 'You decide, the runner collects',
-      body: 'Executing requests wait for you in the Desk. Allow once, allow for the case, or decline with a reason. Output is redacted on your machine before your agent sees it.',
-    },
-    {
-      n: '4',
-      title: 'They reproduce, fix, and only then file',
-      body: 'The helpdesk reproduces against the library, proposes a fix your agent applies and verifies under approval, and files an issue only with confidence “reproduced”.',
-    },
-  ];
   return (
     <Section
       id="how"
       eyebrow="How it works"
       title="Evidence from your machine, knowledge from theirs."
+      lede="One request, drawn. The dot is the request; it never leaves your machine without passing the gate. Hover to pause, pick a step to jump."
     >
-      <ol className="grid gap-6 sm:grid-cols-2">
-        {steps.map((s) => (
-          <li key={s.n} className="flex gap-4">
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-sm border border-line bg-surface font-mono text-xs text-ink-muted">
-              {s.n}
-            </span>
-            <div className="space-y-1">
-              <h3 className="font-semibold">{s.title}</h3>
-              <p className="prose-measure text-sm text-ink-muted">{s.body}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <Flow />
     </Section>
   );
 }
