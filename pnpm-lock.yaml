@@ -77,6 +77,37 @@ importers:
         specifier: ^7.3.7
         version: 7.3.7(@types/node@24.19.2)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.1)
 
+  examples/cachekit:
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.19.2
+
+  examples/cachekit-s3:
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.19.2
+      cachekit:
+        specifier: workspace:*
+        version: link:../cachekit
+
+  examples/sample-app:
+    dependencies:
+      cachekit:
+        specifier: workspace:*
+        version: link:../cachekit
+      cachekit-s3:
+        specifier: workspace:*
+        version: link:../cachekit-s3
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.19.2
+      vitest:
+        specifier: ^3.2.7
+        version: 3.2.7(@types/node@24.19.2)(jiti@2.7.0)(jsdom@27.4.0)(lightningcss@1.32.0)(yaml@2.9.1)
+
   packages/cli:
     dependencies:
       '@counterpart/desk':

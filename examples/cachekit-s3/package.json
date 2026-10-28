@@ -1,0 +1,21 @@
+{
+  "name": "cachekit-s3",
+  "version": "0.4.1",
+  "description": "Back up and restore a cachekit index to an S3 bucket. Example plugin for the Counterpart demo.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "cachekit": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "cachekit": "workspace:*"
+  }
+}
