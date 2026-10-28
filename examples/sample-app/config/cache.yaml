@@ -1,0 +1,6 @@
+# Cache settings for sample-app.
+provider: s3
+bucket: acme-internal-cache
+# Local mirror of the bucket; absolute on purpose so the path redaction is visible in the demo.
+local: /Users/alice/code/sample-app/.cache/cachekit
+ttlSeconds: 60

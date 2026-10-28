@@ -1,0 +1,17 @@
+{
+  "name": "cachekit",
+  "version": "3.2.0",
+  "description": "A small file-backed cache with TTLs. Example library for the Counterpart demo.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0"
+  }
+}
