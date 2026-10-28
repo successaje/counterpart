@@ -13,6 +13,22 @@ export const PrincipalSchema = z.object({
 });
 export type Principal = z.infer<typeof PrincipalSchema>;
 
+/**
+ * A request the runner refused before it could be typed: an unknown evidence
+ * type, or something the agent recognised as outside the menu. Kept so the
+ * ledger shows what was asked, verbatim.
+ */
+export const OtherRequestSchema = z.object({
+  type: z.literal('other'),
+  args: z.object({
+    asked: z.string().min(1).max(200),
+    given: z.unknown().optional(),
+  }),
+});
+
+export const RequestShapeSchema = z.union([EvidenceArgsSchema, OtherRequestSchema]);
+export type RequestShape = z.infer<typeof RequestShapeSchema>;
+
 export const EvidenceRequestSchema = z
   .object({
     id: z.string(),
@@ -24,7 +40,7 @@ export const EvidenceRequestSchema = z
     thread: z.string().url().optional(),
     createdAt: z.string().datetime(),
   })
-  .and(EvidenceArgsSchema);
+  .and(RequestShapeSchema);
 export type EvidenceRequest = z.infer<typeof EvidenceRequestSchema>;
 
 export const ApprovalDecisionSchema = z.enum([

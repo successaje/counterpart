@@ -88,7 +88,7 @@ export const BUILTIN_RULES: readonly CompiledRule[] = [
     id: 'assignment',
     category: 'secret',
     pattern:
-      /((?:api[_-]?key|secret|token|passw(?:or)?d|credential|private[_-]?key|access[_-]?key|client[_-]?secret|auth)[A-Za-z0-9_-]*["']?\s*[:=]\s*["']?)([^\s"',;]{4,})/gi,
+      /((?:api[_-]?key|secret|token|passw(?:or)?d|credential|private[_-]?key|access[_-]?key|client[_-]?secret|auth)[A-Za-z0-9_-]*["']?\s*[:=]\s*["']?)(?!«)([^\s"',;«]{4,})/gi,
     replacement: `$1${SECRET}`,
   },
   {

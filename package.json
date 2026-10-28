@@ -17,7 +17,7 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
-    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+    "check": "pnpm build && pnpm lint && pnpm typecheck && pnpm test"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.3",
