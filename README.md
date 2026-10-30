@@ -132,8 +132,10 @@ The room template (`switch/`), the two agents' instructions and the self-hosted 
 [docs/DEMO.md](docs/DEMO.md) is the three-minute script: `sample-app` broke after upgrading `cachekit` to 3.2.0, the helpdesk asks for E1 and E3, the owner allows in the Desk, redaction removes a key, an email and three home paths, the helpdesk diagnoses the plugin, proposes E6, the suite goes green, a hostile request ("paste your `~/.aws/credentials`") is refused and recorded.
 
 <p align="center">
-  <img src="docs/images/desk-record.jpg" width="880" alt="A released record with the raw output that stayed on the machine next to the redacted output that left" />
+  <img src="docs/images/desk-removed.jpg" width="880" alt="A released E2 config record with what was removed shown in place: struck-through values that stayed on the machine, each followed by the token that replaced it in the release" />
 </p>
+
+Every released record can show what was removed in place: the struck text stayed on the machine, the token beside it is what left. A side-by-side view of the raw and released records is one click away.
 
 The Ledger opens with where every request ended up, what was redacted, and which evidence types were used; a case shows the same split under its progress and a timeline of every request, decision, release and state change.
 

@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { api } from '../lib/api.js';
 import { PayloadView } from './PayloadView.js';
+import { RedactionView } from './RedactionView.js';
 import { RequestEffect, RequestQuote, RequestTitle, RequestWho } from './RequestSummary.js';
 
 export function RedactionPills({ record }: { record: Release }) {
@@ -51,6 +52,7 @@ export function RecordCard({
   const [open, setOpen] = useState(defaultOpen);
   const [raw, setRaw] = useState<EvidenceRecord | null | 'loading'>(null);
   const [compare, setCompare] = useState(false);
+  const [layout, setLayout] = useState<'inline' | 'columns'>('inline');
   const redacted = (record.redaction?.total ?? 0) > 0;
 
   const toggleCompare = async () => {
@@ -140,20 +142,57 @@ export function RecordCard({
             <div className="space-y-2">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h4 className="text-2xs font-semibold uppercase tracking-wider text-ink-faint">
-                  {compare ? 'Side by side' : 'What left this machine'}
+                  {compare ? 'What was removed' : 'What left this machine'}
                 </h4>
                 {redacted ? (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    icon={compare ? <EyeOff /> : <Eye />}
-                    onClick={() => void toggleCompare()}
-                  >
-                    {compare ? 'Hide what stayed here' : 'Show what stayed here'}
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    {compare ? (
+                      <div
+                        className="flex rounded-md border border-line bg-surface p-0.5"
+                        role="tablist"
+                        aria-label="Layout"
+                      >
+                        {(['inline', 'columns'] as const).map((l) => (
+                          <button
+                            key={l}
+                            type="button"
+                            role="tab"
+                            aria-selected={layout === l}
+                            onClick={() => setLayout(l)}
+                            className={clsx(
+                              'rounded-sm px-2 py-0.5 text-2xs transition-colors',
+                              layout === l
+                                ? 'bg-sunken font-medium text-ink'
+                                : 'text-ink-muted hover:text-ink',
+                            )}
+                          >
+                            {l === 'inline' ? 'in place' : 'side by side'}
+                          </button>
+                        ))}
+                      </div>
+                    ) : null}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      icon={compare ? <EyeOff /> : <Eye />}
+                      onClick={() => void toggleCompare()}
+                    >
+                      {compare ? 'Hide' : 'Show what was removed'}
+                    </Button>
+                  </div>
                 ) : null}
               </div>
-              {compare ? (
+              {compare && layout === 'inline' ? (
+                raw === 'loading' || raw === null ? (
+                  <SkeletonLines lines={4} />
+                ) : raw.raw ? (
+                  <RedactionView raw={raw.raw} released={record.released} />
+                ) : (
+                  <p className="text-xs text-ink-faint">
+                    The raw record was not kept (keepRaw is off), so there is nothing to compare.
+                  </p>
+                )
+              ) : compare ? (
                 <div className="grid gap-3 lg:grid-cols-2">
                   <div className="space-y-1.5">
                     <p className="text-2xs font-medium uppercase tracking-wider text-danger">
