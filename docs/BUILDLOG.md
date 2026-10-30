@@ -15,4 +15,5 @@ Milestones, newest last. Dates are in IST.
 | 2026-10-28 | README, contributing guide, demo script, architecture update. (PR #8) |
 | 2026-10-28 | Visualisation: the loop drawn and animated on the site; Ledger overview (outcomes, redactions, evidence types) and case timeline in the Desk; StackedBar, BarList and Timeline in the design system. (PR #9) |
 | 2026-10-30 | Redaction shown in place: alignRedaction and redactedFields in the protocol; the Desk's compare view strikes through what stayed and shows the token that replaced it. (PR #10) |
+| 2026-10-30 | The approval card shows the request's path from the room to the agent, with the owner's decision as the current step. (PR #11) |
 | 2026-11-04 | Hackathon window opens: Switch server, agents, room template, evidence-protocol document. |

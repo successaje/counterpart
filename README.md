@@ -13,7 +13,7 @@ The shared room runs on [Switch](https://github.com/sandbox-quantum/switch), the
 > **Status.** Pre-release, built in the open for the WeMakeDevs [Flip the Switch](https://www.wemakedevs.org/hackathons/switch) hackathon (4–7 November 2026). The local tooling in this repository is complete and tested. The Switch rooms, templates and agent setup are built during the hackathon window, as the rules require; see [Switch integration](#switch-integration).
 
 <p align="center">
-  <img src="docs/images/desk-now.jpg" width="880" alt="The Desk showing one request waiting for approval: E3 command test, asked by cachekit-helpdesk, with what will run and three decisions" />
+  <img src="docs/images/desk-now.jpg" width="880" alt="The Desk showing one request waiting for approval: E3 command test, asked by cachekit-helpdesk, with what will run, the request's path from the room to the agent paused at your decision, and three decisions" />
 </p>
 
 ## The problem
