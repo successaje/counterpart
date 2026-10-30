@@ -43,6 +43,7 @@ export function RequestPath({ record, className }: { record: Release; className?
       current={collecting ? 'collect' : 'decision'}
       tone={collecting ? 'info' : 'pending'}
       live
+      label="Request path"
       {...(className ? { className } : {})}
     />
   );

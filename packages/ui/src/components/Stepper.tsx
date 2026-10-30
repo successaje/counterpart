@@ -14,6 +14,8 @@ export interface StepperProps {
   tone?: 'ink' | 'pending' | 'info' | 'accent';
   /** Pulses the current step: something is happening or someone is being waited on. */
   live?: boolean;
+  /** Accessible name of the list. */
+  label?: string;
   className?: string;
 }
 
@@ -34,13 +36,14 @@ export function Stepper({
   aside,
   tone = 'ink',
   live = false,
+  label = 'Case progress',
   className,
 }: StepperProps) {
   const idx = steps.findIndex((s) => s.id === current);
   return (
     <ol
       className={clsx('flex flex-wrap items-center gap-x-1 gap-y-2 sm:gap-x-2', className)}
-      aria-label="Case progress"
+      aria-label={label}
     >
       {steps.map((s, i) => {
         const done = idx > i;
