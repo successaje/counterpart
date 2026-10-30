@@ -10,14 +10,32 @@ export interface StepperProps {
   current: string;
   /** Marks the flow as parked on a side state (e.g. needs-human). */
   aside?: { label: string; tone: 'pending' | 'danger' } | null;
+  /** Colour of the current step. `ink` is a settled position; the others say what kind of wait it is. */
+  tone?: 'ink' | 'pending' | 'info' | 'accent';
+  /** Pulses the current step: something is happening or someone is being waited on. */
+  live?: boolean;
   className?: string;
 }
+
+const ACTIVE: Record<NonNullable<StepperProps['tone']>, string> = {
+  ink: 'bg-ink ring-4 ring-ink/10',
+  pending: 'bg-pending ring-4 ring-pending/15',
+  info: 'bg-info ring-4 ring-info/15',
+  accent: 'bg-accent ring-4 ring-accent/15',
+};
 
 /**
  * Horizontal progress through case states. On narrow screens only the
  * current step and its neighbours are labelled.
  */
-export function Stepper({ steps, current, aside, className }: StepperProps) {
+export function Stepper({
+  steps,
+  current,
+  aside,
+  tone = 'ink',
+  live = false,
+  className,
+}: StepperProps) {
   const idx = steps.findIndex((s) => s.id === current);
   return (
     <ol
@@ -38,7 +56,8 @@ export function Stepper({ steps, current, aside, className }: StepperProps) {
               className={clsx(
                 'size-2 shrink-0 rounded-full transition-colors duration-200',
                 done && 'bg-accent',
-                active && !aside && 'bg-ink ring-4 ring-ink/10',
+                active && !aside && ACTIVE[tone],
+                active && live && 'animate-pulse-dot',
                 active &&
                   aside &&
                   (aside.tone === 'danger'
