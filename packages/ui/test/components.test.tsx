@@ -37,6 +37,23 @@ describe('Stepper', () => {
     );
     expect(screen.getByText('Diagnosed').closest('li')?.getAttribute('aria-current')).toBe('step');
   });
+
+  it('colours and pulses the current step when asked', () => {
+    const { container } = render(
+      <Stepper
+        steps={[
+          { id: 'a', label: 'Asked' },
+          { id: 'b', label: 'Your decision' },
+        ]}
+        current="b"
+        tone="pending"
+        live
+      />,
+    );
+    const dot = container.querySelector('li[aria-current="step"] span');
+    expect(dot?.className).toContain('bg-pending');
+    expect(dot?.className).toContain('animate-pulse-dot');
+  });
 });
 
 describe('CodeBlock', () => {
