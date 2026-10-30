@@ -4,12 +4,14 @@ import { Check, ShieldCheck, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { useDesk } from '../lib/store.js';
+import { RequestPath } from './RequestPath.js';
 import { RequestEffect, RequestQuote, RequestTitle, RequestWho } from './RequestSummary.js';
 
 /**
  * The approval card: the one screen the whole product is built around. It
  * says who asked, what they said, exactly what will happen, and offers three
- * decisions. After "allow" it shows the stages until the release lands.
+ * decisions. The path under the request shows where it is on its way from
+ * the room to the agent; after "allow" it moves along until the release lands.
  */
 export function ApprovalCard({ record }: { record: Release }) {
   const { state, decide } = useDesk();
@@ -48,9 +50,9 @@ export function ApprovalCard({ record }: { record: Release }) {
         <RequestEffect record={record} menu={state.info?.menu} />
       </div>
 
-      {record.status === 'collecting' ? (
-        <Stages />
-      ) : (
+      <RequestPath record={record} />
+
+      {record.status === 'collecting' ? null : (
         <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="solid"
@@ -121,44 +123,5 @@ export function ApprovalCard({ record }: { record: Release }) {
         </Field>
       </Dialog>
     </Card>
-  );
-}
-
-function Stages() {
-  const steps = [
-    { label: 'Approved', state: 'done' },
-    { label: 'Collecting and redacting', state: 'active' },
-    { label: 'Released to your agent', state: 'todo' },
-  ] as const;
-  return (
-    <ol className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs" aria-label="Progress">
-      {steps.map((s, i) => (
-        <li key={s.label} className="flex items-center gap-1.5">
-          <span
-            className={
-              s.state === 'done'
-                ? 'size-1.5 rounded-full bg-accent'
-                : s.state === 'active'
-                  ? 'size-1.5 animate-pulse-dot rounded-full bg-info'
-                  : 'size-1.5 rounded-full bg-line-strong'
-            }
-          />
-          <span
-            className={
-              s.state === 'todo'
-                ? 'text-ink-faint'
-                : s.state === 'active'
-                  ? 'font-medium text-ink'
-                  : 'text-ink-muted'
-            }
-          >
-            {s.label}
-          </span>
-          {i < steps.length - 1 ? (
-            <span className="ml-1.5 h-px w-4 bg-line-strong" aria-hidden />
-          ) : null}
-        </li>
-      ))}
-    </ol>
   );
 }
