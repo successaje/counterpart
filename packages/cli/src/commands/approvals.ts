@@ -33,8 +33,12 @@ export function describeRequest(r: Release): string[] {
   return lines;
 }
 
-export async function listApprovals(handle: RunnerHandle): Promise<void> {
+export async function listApprovals(handle: RunnerHandle, json = false): Promise<void> {
   const pending = await handle.pendingApprovals();
+  if (json) {
+    console.log(JSON.stringify(pending, null, 2));
+    return;
+  }
   if (pending.length === 0) {
     console.log(ui.dim('nothing is waiting for your decision'));
     return;
@@ -54,9 +58,10 @@ export async function decide(
   recordId: string,
   decision: 'allowed-once' | 'allowed-for-case' | 'declined',
   note?: string,
+  json = false,
 ): Promise<CollectResult> {
   const result = await handle.decide(recordId, { decision, via: 'cli', ...(note ? { note } : {}) });
-  console.log(collectResultText(result));
+  console.log(json ? JSON.stringify(result, null, 2) : collectResultText(result));
   return result;
 }
 

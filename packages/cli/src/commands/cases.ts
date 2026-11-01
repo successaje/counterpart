@@ -10,8 +10,12 @@ import {
 } from '../mcp/format.js';
 import { columns, heading, relative, ui } from '../ui.js';
 
-export async function listCases(handle: RunnerHandle, all: boolean): Promise<void> {
+export async function listCases(handle: RunnerHandle, all: boolean, json = false): Promise<void> {
   const cases = await handle.listCases(all ? {} : { open: true });
+  if (json) {
+    console.log(JSON.stringify(cases, null, 2));
+    return;
+  }
   if (cases.length === 0) {
     console.log(ui.dim(all ? 'no cases yet' : 'no open cases'));
     return;
@@ -29,8 +33,17 @@ export async function listCases(handle: RunnerHandle, all: boolean): Promise<voi
   );
 }
 
-export async function showCase(handle: RunnerHandle, id: string, full: boolean): Promise<void> {
+export async function showCase(
+  handle: RunnerHandle,
+  id: string,
+  full: boolean,
+  json = false,
+): Promise<void> {
   const [c, releases] = await Promise.all([handle.getCase(id), handle.listRecords(id)]);
+  if (json) {
+    console.log(JSON.stringify({ case: c, records: releases }, null, 2));
+    return;
+  }
   console.log(caseText(c, releases));
   if (full) {
     for (const r of releases) {

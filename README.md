@@ -132,6 +132,8 @@ limits:
 
 The ledger lives next to it: `.counterpart/state/` (cases, server record) and `.counterpart/evidence/` (one JSON per record, raw and released). `init` adds both to `.gitignore`.
 
+**Scripts and agents.** `info`, `approvals`, `cases`, `case`, `approve` and `decline` take `--json` and print the same objects the Desk renders, releases only: raw evidence never leaves the ledger. `--no-color` (or `NO_COLOR`) turns colour off. Exit codes: 0 on success, 1 on a refused or failed action, 2 on bad arguments.
+
 ## Switch integration
 
 Counterpart's room is a Switch room with two agents owned by two people:
