@@ -13,7 +13,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "bin",
@@ -37,5 +38,27 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/successaje/counterpart.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/successaje/counterpart#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "agents",
+    "switch",
+    "support",
+    "redaction",
+    "evidence",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=20.11"
   }
 }
