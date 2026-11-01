@@ -49,3 +49,26 @@ jobs:
           npm install --no-audit --no-fund "$GITHUB_WORKSPACE"/release/*.tgz
           npx counterpart --version
           npx counterpart --help | head -5
+
+  e2e:
+    name: Desk end-to-end
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm --filter @counterpart/desk exec playwright install --with-deps chromium
+      # The built Desk against a real runner with seeded cases, desktop and phone.
+      - run: pnpm --filter @counterpart/desk e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-results
+          path: apps/desk/test-results
+          if-no-files-found: ignore

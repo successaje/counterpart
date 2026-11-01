@@ -10,6 +10,8 @@ import { spawnSync } from 'node:child_process';
  *
  *   node scripts/desk-dev-server.mjs
  *   pnpm --filter @counterpart/desk dev
+ *
+ * COUNTERPART_PORT picks the port; COUNTERPART_TOKEN pins the Desk token.
  */
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
@@ -124,6 +126,8 @@ const conn = await connect(root, {
   port: Number(process.env.COUNTERPART_PORT ?? 4747),
   corsOrigins: ['http://localhost:5173'],
   ...((await exists(`${deskDir}index.html`)) ? { deskDir } : {}),
+  // COUNTERPART_TOKEN pins the Desk token so an end-to-end test can open the page.
+  ...(process.env.COUNTERPART_TOKEN ? { token: process.env.COUNTERPART_TOKEN } : {}),
 });
 if (conn?.mode !== 'local') throw new Error('could not start a server');
 const h = conn.handle;

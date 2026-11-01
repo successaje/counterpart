@@ -27,6 +27,8 @@ export interface ConnectOptions {
   port?: number;
   deskDir?: string;
   corsOrigins?: string[];
+  /** Fixed Desk token instead of a random one; for test harnesses only. */
+  token?: string;
 }
 
 /**
@@ -53,6 +55,7 @@ export async function connect(root: string, opts: ConnectOptions = {}): Promise<
     runner,
     ...(opts.deskDir ? { deskDir: opts.deskDir } : {}),
     ...(opts.corsOrigins ? { corsOrigins: opts.corsOrigins } : {}),
+    ...(opts.token ? { token: opts.token } : {}),
   };
   let server: RunningServer;
   try {

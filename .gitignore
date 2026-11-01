@@ -27,3 +27,7 @@ coverage/
 
 # release tarballs (pnpm release:pack)
 /release/
+
+# playwright
+/apps/desk/test-results/
+/apps/desk/playwright-report/
