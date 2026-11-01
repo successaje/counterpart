@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@counterpart/protocol": "workspace:*",
-    "@hono/node-server": "^1.19.9",
+    "@hono/node-server": "^2.1.5",
     "hono": "^4.11.4",
     "tinyglobby": "^0.2.14",
     "yaml": "^2.9.1",
