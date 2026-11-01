@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Counterpart social image</title>
+    <style>
+      /* 1200×630, the OG/Twitter card size. Same tokens as the design system. */
+      :root {
+        --paper: #f6f4ee;
+        --surface: #fffefb;
+        --ink: #1b1a17;
+        --muted: #625e55;
+        --faint: #928d82;
+        --line: #c9c3b6;
+        --accent: #1f6f4a;
+        --accent-soft: #e2efe7;
+        --pending: #a8630b;
+        --danger: #a63d2f;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 1200px; height: 630px; background: var(--paper); color: var(--ink);
+        font-family: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+      .frame { position: relative; width: 1200px; height: 630px; padding: 64px 72px; display: grid; grid-template-columns: 1fr 470px; gap: 40px; }
+      .brand { display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 28px; letter-spacing: -0.01em; }
+      .mark { width: 36px; height: 36px; border-radius: 50%; background: conic-gradient(from 180deg, var(--ink) 0 50%, var(--accent) 50% 100%); }
+      h1 { margin: 40px 0 20px; font-size: 64px; line-height: 1.02; letter-spacing: -0.025em; font-weight: 600; max-width: 14ch; }
+      p.lede { margin: 0; font-size: 24px; line-height: 1.4; color: var(--muted); max-width: 30ch; }
+      .pill { position: absolute; left: 72px; bottom: 64px; display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 6px;
+        background: var(--accent-soft); color: var(--accent); font-size: 18px; font-weight: 500; letter-spacing: 0.02em; }
+      .pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+      .card { align-self: center; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--pending); border-radius: 12px; padding: 24px 26px;
+        box-shadow: 0 8px 24px rgb(27 26 23 / 0.08); font-size: 17px; }
+      .card .t { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 20px; }
+      .code { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; border: 1px solid var(--line); border-radius: 4px; padding: 2px 6px; background: var(--surface); }
+      .mono { font-family: "IBM Plex Mono", Menlo, monospace; }
+      .who { margin-top: 8px; color: var(--muted); font-size: 15px; }
+      .rows { margin-top: 18px; display: grid; grid-template-columns: 92px 1fr; row-gap: 8px; column-gap: 14px; color: var(--ink); }
+      .rows .k { color: var(--faint); }
+      .path { margin-top: 20px; display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--faint); flex-wrap: wrap; }
+      .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); display: inline-block; }
+      .dot.done { background: var(--accent); }
+      .dot.now { background: var(--pending); box-shadow: 0 0 0 4px rgb(168 99 11 / 0.18); }
+      .now-l { color: var(--ink); font-weight: 600; }
+      .btns { margin-top: 20px; display: flex; gap: 10px; }
+      .b { white-space: nowrap; padding: 9px 14px; border-radius: 6px; font-weight: 500; font-size: 15px; border: 1px solid var(--line); background: var(--surface); }
+      .b.solid { background: var(--accent); color: #f6f4ee; border-color: var(--accent); }
+      .b.danger { color: var(--danger); border-color: transparent; margin-left: auto; }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <div>
+        <div class="brand"><span class="mark"></span> Counterpart</div>
+        <h1>Support where both sides bring an agent.</h1>
+        <p class="lede">Evidence collected on your machine, under your approval, redacted before it leaves. Built on Switch.</p>
+        <div class="pill">nothing leaves without you</div>
+      </div>
+      <div class="card">
+        <div class="t"><span class="code">E3</span> Command <span class="mono">test</span></div>
+        <div class="who">cachekit-helpdesk asked · “E3 test with the verbose flag, please.”</div>
+        <div class="rows">
+          <span class="k">Will run</span><span class="mono">sh test.sh --verbose</span>
+          <span class="k">Shell</span><span>none; an argument list</span>
+          <span class="k">Output</span><span>redacted before release</span>
+        </div>
+        <div class="path">
+          <span class="dot done"></span> asked <span class="dot done"></span> on the menu
+          <span class="dot now"></span> <span class="now-l">your decision</span>
+          <span class="dot"></span> collect <span class="dot"></span> redact <span class="dot"></span> release
+        </div>
+        <div class="btns"><span class="b solid">✓ Allow once</span><span class="b">Allow for this case</span><span class="b danger">✕ Decline</span></div>
+      </div>
+    </div>
+  </body>
+</html>

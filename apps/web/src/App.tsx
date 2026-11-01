@@ -5,7 +5,7 @@ import { ArrowRight, ExternalLink } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Demo } from './components/Demo.js';
 import { Flow } from './components/Flow.js';
-import { HACKATHON, REPO, SWITCH } from './links.js';
+import { DOCS, HACKATHON, REPO, SWITCH } from './links.js';
 
 const NAV = [
   { href: '#demo', label: 'See it' },
@@ -59,10 +59,26 @@ export function App() {
       </main>
 
       <footer className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-xs text-ink-muted sm:px-6">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-6 text-xs text-ink-muted sm:px-6">
           <span className="inline-flex items-center gap-2">
             <Wordmark compact /> Counterpart · Apache-2.0
           </span>
+          <nav className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Documentation">
+            {(
+              [
+                ['Architecture', DOCS.architecture],
+                ['Product model', DOCS.product],
+                ['Security', DOCS.security],
+                ['Switch integration', DOCS.switch],
+                ['Demo script', DOCS.demo],
+                ['Changelog', DOCS.changelog],
+              ] as const
+            ).map(([label, href]) => (
+              <a key={href} href={href} className="hover:text-ink">
+                {label}
+              </a>
+            ))}
+          </nav>
           <span>
             Built for{' '}
             <a href={HACKATHON} className="text-ink underline-offset-2 hover:underline">
