@@ -30,30 +30,30 @@ And it is judged by the hackathon's four criteria: use of Switch, technical exec
 
 | Gap | Why it matters | Closes in |
 | --- | --- | --- |
-| No end-to-end test: nothing proves the Desk, the server and the runner work together in a browser | "Does it run" is a judging criterion; unit tests do not show the approval round trip | PR #16, Playwright |
+| No end-to-end test: nothing proves the Desk, the server and the runner work together in a browser | "Does it run" is a judging criterion; unit tests do not show the approval round trip | PR #26, Playwright |
 | No release path: nothing can be installed with `npm install -g counterpart` | The README promises it; reproducibility | PR #13, release workflow with a pack dry-run on every PR and publish on tag (needs `NPM_TOKEN`) |
 | No `CHANGELOG`, `SECURITY.md`, code of conduct, issue or PR templates, Dependabot | What every top repository has; the first things a judge or contributor looks for | PR #13 |
-| CLI prints prose only; scripts and agents cannot consume it | Every comparable CLI has `--json` | PR #14 |
-| MCP tools carry no annotations | Clients use `readOnlyHint` and `destructiveHint` to decide when to prompt; without them a read tool may prompt and a write tool may not | PR #14 |
+| CLI prints prose only; scripts and agents cannot consume it | Every comparable CLI has `--json` | PR #15 |
+| MCP tools carry no annotations | Clients use `readOnlyHint` and `destructiveHint` to decide when to prompt; without them a read tool may prompt and a write tool may not | PR #15 |
 | Windows is not addressed | It is not supported for E4 (no sandbox) and that should be said | PR #13, README |
 
 ### Desk experience
 
 | Gap | Why it matters | Closes in |
 | --- | --- | --- |
-| No keyboard path through an approval | The person deciding is a developer; Claude Code's prompt is answered with one key | PR #15: `a` allow once, `c` allow for case, `d` decline on the first card; `g` + `n/c/l/m` to navigate; `?` for the sheet |
-| Nothing tells the owner a request arrived while the tab is in the background | The whole loop waits on them | PR #15: tab title badge, optional desktop notification |
-| Theme follows the system with no override | Every comparable tool offers one | PR #15: system / light / dark in the sidebar, persisted |
-| Pending requests expire silently | The owner should see the clock | PR #15: "expires in 9 min" on the card |
-| Connection drops show "server unreachable" and wait | Mailpit and friends reconnect with backoff and say so | PR #15: backoff with a visible retry |
-| Decided cards vanish; new ones pop | A settled card should leave, not disappear | PR #15: exit transition |
-| No skip link | Accessibility baseline | PR #15 |
+| No keyboard path through an approval | The person deciding is a developer; Claude Code's prompt is answered with one key | PR #26: `a` allow once, `c` allow for case, `d` decline on the first card; `g` + `n/c/l/m` to navigate; `?` for the sheet |
+| Nothing tells the owner a request arrived while the tab is in the background | The whole loop waits on them | PR #26: tab title badge, optional desktop notification |
+| Theme follows the system with no override | Every comparable tool offers one | PR #26: system / light / dark in the sidebar, persisted |
+| Pending requests expire silently | The owner should see the clock | PR #26: "expires in 9 min" on the card |
+| Connection drops show "server unreachable" and wait | Mailpit and friends reconnect with backoff and say so | PR #26: a watchdog on the stream, a visible retry, and a probe that lands a rotated token on the Connect screen |
+| Decided cards vanish; new ones pop | A settled card should leave, not disappear | PR #26: exit transition |
+| No skip link | Accessibility baseline | PR #26 |
 
 ### Presentation
 
 | Gap | Why it matters | Closes in |
 | --- | --- | --- |
-| Site has no social image, no canonical, no Pages 404 | Links to it look empty in Slack, Discord and X, where the hackathon is judged | PR #17 |
+| Site has no social image, no canonical, no Pages 404 | Links to it look empty in Slack, Discord and X, where the hackathon is judged | PR #27 |
 | README has no badges, no table of contents, no demo video section | The first screen of the README is the pitch | PR #13 |
 | The Switch integration is described only in the README's Switch section | Judges read "use of Switch" first; the design should be written down before the window, the code built inside it | PR #13, `docs/SWITCH.md` |
 
@@ -71,10 +71,12 @@ And it is judged by the hackathon's four criteria: use of Switch, technical exec
 
 | Item | PR | State |
 | --- | --- | --- |
-| Repository hygiene, release workflow, README, `docs/SWITCH.md` | #13 | in progress |
-| MCP annotations, CLI `--json` | #14 | planned |
-| Desk shortcuts, notifications, theme, expiry, reconnect, exit motion, skip link | #15 | planned |
-| Playwright end-to-end in CI | #16 | planned |
-| Site meta, social image, footer, Pages 404 | #17 | planned |
+| Repository hygiene, release workflow, README, `docs/SWITCH.md` | [#13](https://github.com/successaje/counterpart/pull/13) | merged |
+| MCP annotations, CLI `--json` | [#15](https://github.com/successaje/counterpart/pull/15) | merged |
+| Desk shortcuts, notifications, theme, expiry, reconnect, exit motion, skip link; Playwright end-to-end in CI; runner shutdown fix | [#26](https://github.com/successaje/counterpart/pull/26) | merged |
+| Site social image, meta, footer links | [#27](https://github.com/successaje/counterpart/pull/27) | merged |
 | Switch rooms, agents, templates | window, 4–7 Nov | by rule |
-| npm publish, GitHub Pages, Switch server credentials | needs the owner | simulated until then |
+| npm publish (`NPM_TOKEN`), GitHub Pages, Switch server credentials | needs the owner | simulated: packages pack and install from tarballs in CI; the Pages workflow is ready; the Switch design is in `docs/SWITCH.md` |
+| Dependabot's first batch (action bumps, a minor group, four major bumps) | #14, #16–#25 | left for the owner; majors are now ignored by configuration |
+
+Found and fixed along the way, none of which a unit test had caught: `counterpart desk` hung on Ctrl-C while a Desk tab was open (the server waited for the SSE stream); a dropped stream could go unnoticed by the browser; a restarted server with a new token left a stale page instead of the Connect screen; a `#token` arriving in an open tab was ignored.

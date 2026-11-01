@@ -6,12 +6,21 @@ All notable changes to Counterpart. The format follows [Keep a Changelog](https:
 
 ### Added
 
+- Site: a generated 1200×630 social image, Open Graph and Twitter tags, a canonical URL, `robots.txt`, and footer links to the documentation ([#27](https://github.com/successaje/counterpart/pull/27)).
+- Desk: keyboard shortcuts (`a`/`c`/`d` on the first waiting request, `g` then `n`/`c`/`l`/`m`, `?` for the sheet), tab title badge, opt-in desktop notifications, a system/light/dark switch, expiry on waiting cards, an exit transition for settled cards, a stream watchdog with retry, automatic landing on the Connect screen after a token rotation, a skip link ([#26](https://github.com/successaje/counterpart/pull/26)).
+- Playwright end-to-end tests for the Desk against the seeded runner, desktop and phone, run in CI ([#26](https://github.com/successaje/counterpart/pull/26)).
+- MCP tool annotations (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) on all nine tools; `--json` on `info`, `approvals`, `cases`, `case`, `approve` and `decline`; `--no-color` ([#15](https://github.com/successaje/counterpart/pull/15)).
+
 - Repository hygiene: security policy, code of conduct, issue and pull request templates, Dependabot, a release workflow that packs every public package on each pull request and publishes on a version tag, and this changelog ([#13](https://github.com/successaje/counterpart/pull/13)).
 - `docs/SWITCH.md`, the design of the Switch integration that is built during the hackathon window, and `docs/PRODUCTION-AUDIT.md`, the comparison with similar tools and the list it produced ([#13](https://github.com/successaje/counterpart/pull/13)).
 - Outcome bar on every case row ([#12](https://github.com/successaje/counterpart/pull/12)).
 - The request's path on the approval card, with the owner's decision as the current step ([#11](https://github.com/successaje/counterpart/pull/11)).
 - What was removed, shown in place: `alignRedaction` and `redactedFields` in the protocol, the in-place view in the Desk ([#10](https://github.com/successaje/counterpart/pull/10)).
 - The loop drawn and animated on the site; Ledger overview and case timeline in the Desk; `StackedBar`, `BarList`, `Timeline` in the design system ([#9](https://github.com/successaje/counterpart/pull/9)).
+
+### Fixed
+
+- `counterpart desk` hung on Ctrl-C while a Desk tab was open: closing the server waited for the event stream. It now drops every connection and exits at once ([#26](https://github.com/successaje/counterpart/pull/26)).
 
 ## 0.1.0 · 2026-10-28
 
