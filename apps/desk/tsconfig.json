@@ -3,28 +3,13 @@
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "lib": [
-      "ES2023",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
-    "types": [
-      "react",
-      "react-dom",
-      "vite/client"
-    ],
+    "types": ["react", "react-dom", "vite/client"],
     "composite": false,
     "declaration": false,
     "declarationMap": false,
     "noEmit": true
   },
-  "include": [
-    "src",
-    "test",
-    "e2e",
-    "vite.config.ts",
-    "vitest.config.ts",
-    "playwright.config.ts"
-  ]
+  "include": ["src", "test", "e2e", "vite.config.ts", "vitest.config.ts", "playwright.config.ts"]
 }
