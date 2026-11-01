@@ -66,7 +66,7 @@ jobs:
       - run: pnpm --filter @counterpart/desk exec playwright install --with-deps chromium
       # The built Desk against a real runner with seeded cases, desktop and phone.
       - run: pnpm --filter @counterpart/desk e2e
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-results
