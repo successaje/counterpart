@@ -18,7 +18,11 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "check": "pnpm build && pnpm lint && pnpm typecheck && pnpm test",
-    "dev:desk-server": "node scripts/desk-dev-server.mjs"
+    "dev:desk-server": "node scripts/desk-dev-server.mjs",
+    "release:pack": "node scripts/release-pack.mjs",
+    "release:publish": "pnpm -r --filter @counterpart/protocol --filter @counterpart/runner --filter @counterpart/desk --filter counterpart publish --access public --no-git-checks",
+    "version:set": "node scripts/version-set.mjs",
+    "demo": "pnpm --filter @counterpart/desk build && node scripts/desk-dev-server.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.3",
@@ -33,6 +37,15 @@
   },
   "dependencies": {
     "@counterpart/runner": "workspace:*",
-    "yaml": "^2.9.1"
+    "yaml": "^2.9.1",
+    "tinyglobby": "^0.2.14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/successaje/counterpart.git"
+  },
+  "homepage": "https://github.com/successaje/counterpart#readme",
+  "bugs": {
+    "url": "https://github.com/successaje/counterpart/issues"
   }
 }

@@ -1,0 +1,43 @@
+name: Bug report
+description: Something ran, read, left or stayed when it should not have, or the Desk or CLI misbehaved
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If this is about evidence leaving a machine unredacted or unapproved, do not file it here. Use the Security tab to report it privately.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `counterpart --version`, or the commit on `main`.
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Platform
+      description: OS and version, Node version, package manager.
+      placeholder: macOS 15.5, Node 24.2, pnpm 10
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what happened instead. Paste the redacted ledger record (`counterpart case <id> --full`) if there is one.
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: counterpart doctor
+      description: Output of `counterpart doctor` in the project.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I removed anything from the paste that should not be public.
+          required: true

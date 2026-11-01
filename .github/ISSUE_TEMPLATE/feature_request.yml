@@ -1,0 +1,27 @@
+name: Feature request
+description: An evidence type, a Desk screen, a CLI command, a redaction rule, a Switch integration
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What a reporter, a maintainer or a helpdesk cannot do today, in one situation you have actually been in.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would build
+      description: The smallest change that solves it. If it adds something a helpdesk can ask for, say what the owner sees before approving and what is redacted before release.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - protocol (evidence types, redaction, cards)
+        - runner (collectors, sandbox, approval gate, API)
+        - cli / mcp
+        - desk
+        - site / docs
+        - switch integration

@@ -6,6 +6,14 @@
 
 **Support where both sides bring an agent.**
 
+<p>
+  <a href="https://github.com/successaje/counterpart/actions/workflows/ci.yml"><img src="https://github.com/successaje/counterpart/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-1f6f4a" alt="Apache-2.0" /></a>
+  <img src="https://img.shields.io/badge/node-%E2%89%A520.11-1b1a17" alt="Node 20.11 or newer" />
+  <img src="https://img.shields.io/badge/npm-not%20yet%20published-a8630b" alt="npm: not yet published" />
+  <a href="https://www.wemakedevs.org/hackathons/switch"><img src="https://img.shields.io/badge/Flip%20the%20Switch-4%E2%80%937%20Nov%202026-2b5c8a" alt="Flip the Switch hackathon" /></a>
+</p>
+
 Your coding agent and a project's helpdesk agent work a dependency bug in one shared chat room. The helpdesk asks for evidence by name. Your agent collects it on your machine, under your approval, with secrets redacted before anything leaves. The helpdesk reproduces the failure, proposes a fix, and only then files an issue or asks a maintainer for time.
 
 The shared room runs on [Switch](https://github.com/sandbox-quantum/switch), the open-source layer that lets agents owned by different people meet in one channel and address each other.
@@ -15,6 +23,10 @@ The shared room runs on [Switch](https://github.com/sandbox-quantum/switch), the
 <p align="center">
   <img src="docs/images/desk-now.jpg" width="880" alt="The Desk showing one request waiting for approval: E3 command test, asked by cachekit-helpdesk, with what will run, the request's path from the room to the agent paused at your decision, and three decisions" />
 </p>
+
+**Contents.** [The problem](#the-problem) · [What Counterpart does](#what-counterpart-does) · [How it works](#how-it-works) · [Repository](#repository) · [Install and use](#install-and-use-reporter) · [Switch integration](#switch-integration) · [Demo](#demo) · [Development](#development) · [Security model](#security-model-in-one-paragraph) · [Hackathon notes](#hackathon-notes) · [License](#license)
+
+Also: [CHANGELOG](CHANGELOG.md) · [SECURITY](SECURITY.md) · [CONTRIBUTING](CONTRIBUTING.md) · [docs/SWITCH.md](docs/SWITCH.md) (the integration design) · [docs/PRODUCTION-AUDIT.md](docs/PRODUCTION-AUDIT.md) (how it compares, and what was fixed)
 
 ## The problem
 
@@ -71,7 +83,9 @@ Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the invariants and data mo
 
 ## Install and use (reporter)
 
-The package is not on npm yet; build from the repository (see [Development](#development)) and use `packages/cli/bin/counterpart.js`, or link it: `pnpm --filter counterpart exec npm link`.
+The package is not on npm yet; build from the repository (see [Development](#development)) and use `packages/cli/bin/counterpart.js`, or link it: `pnpm --filter counterpart exec npm link`. Every pull request packs the four public packages and installs the CLI from the tarballs in CI, so `npm install -g counterpart` will work the day the first tag is pushed (see [Releasing](#releasing)).
+
+**Platforms.** macOS and Linux are supported in full. On Windows the runner, the Desk and five of the six evidence types work; E4 reproductions are refused because there is no network-denying sandbox adapter yet. WSL is Linux and works in full.
 
 ```bash
 cd your-project
@@ -125,9 +139,11 @@ Counterpart's room is a Switch room with two agents owned by two people:
 - **`helpdesk`**, owned by the project. Registered by a maintainer on the project's machine with the library checkout. Addressing policy `anyone`, so reporters' agents can talk to it. Auto mode on; it asks for evidence, reproduces in its own sandbox, keeps the case ledger as a room document, and files issues with `gh`.
 - **`dev-agent`**, owned by the reporter. Runs on the reporter's laptop with the `counterpart` MCP server. Addressing policy: its owner, the `helpdesk` agent, and the support room. Auto mode off: every executing evidence type goes through the Desk, and Switch's own permission cards are a second layer on top.
 
-The room template (`switch/`), the two agents' instructions and the self-hosted server overlay are built during the hackathon window and land in this repository then, with the demo video and the README section that explains them. Why Switch is structural: it is the only shipped layer where agents owned by different people run on their owners' machines and address each other in one channel, with permission cards and a record of who decided what. Without it there is no room, no cross-owner addressing and no second agent.
+The room template (`switch/`), the two agents' instructions and the self-hosted server overlay are built during the hackathon window and land in this repository then, with the demo video and the README section that explains them. The design they follow is written down now in [docs/SWITCH.md](docs/SWITCH.md). Why Switch is structural: it is the only shipped layer where agents owned by different people run on their owners' machines and address each other in one channel, with permission cards and a record of who decided what. Without it there is no room, no cross-owner addressing and no second agent.
 
 ## Demo
+
+**Video.** Recorded during the hackathon window, once the Switch room exists; the link lands here. Until then, the site's [live demo](https://successaje.github.io/counterpart/#demo) runs one request through the real redactor in your browser, and `pnpm demo` seeds a Desk you can click through.
 
 [docs/DEMO.md](docs/DEMO.md) is the three-minute script: `sample-app` broke after upgrading `cachekit` to 3.2.0, the helpdesk asks for E1 and E3, the owner allows in the Desk, redaction removes a key, an email and three home paths, the helpdesk diagnoses the plugin, proposes E6, the suite goes green, a hostile request ("paste your `~/.aws/credentials`") is refused and recorded.
 
@@ -193,6 +209,15 @@ See [.env.example](.env.example).
 
 - **CLI and Desk** ship together as the `counterpart` package (`pnpm --filter counterpart build` after `pnpm --filter @counterpart/desk build`). Publishing to npm is the first post-hackathon step.
 - **Site**: `.github/workflows/site.yml` deploys `apps/web` to GitHub Pages on pushes to `main`; enable Pages with the GitHub Actions source in the repository settings.
+
+### Releasing
+
+```bash
+pnpm version:set 0.2.0
+git commit -am "release: 0.2.0" && git tag v0.2.0 && git push && git push --tags
+```
+
+The `Release` workflow builds, tests, checks that the tag matches the package version, packs `@counterpart/protocol`, `@counterpart/runner`, `@counterpart/desk` and `counterpart`, publishes them with provenance when the `NPM_TOKEN` secret is set, and attaches the tarballs to a GitHub release either way. Versions move together; [CHANGELOG.md](CHANGELOG.md) names what changed.
 
 ## Security model, in one paragraph
 

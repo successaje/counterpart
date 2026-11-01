@@ -24,3 +24,6 @@ dist/
 !.vscode/extensions.json
 *.log
 coverage/
+
+# release tarballs (pnpm release:pack)
+/release/

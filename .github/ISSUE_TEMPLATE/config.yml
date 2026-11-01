@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: https://github.com/successaje/counterpart/security/advisories/new
+    about: Evidence left a machine unredacted or unapproved? Report it privately here.
+  - name: Switch
+    url: https://github.com/sandbox-quantum/switch
+    about: Questions about rooms, agents and addressing belong with Switch.

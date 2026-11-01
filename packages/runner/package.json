@@ -10,7 +10,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
@@ -31,5 +32,14 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/successaje/counterpart.git",
+    "directory": "packages/runner"
+  },
+  "homepage": "https://github.com/successaje/counterpart#readme",
+  "publishConfig": {
+    "access": "public"
   }
 }
