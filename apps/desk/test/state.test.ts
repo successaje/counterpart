@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { tokenFromInput } from '../src/lib/api.js';
 import {
   applyEvent,
+  caseSegments,
   initialState,
   reduce,
   selectByType,
@@ -128,5 +129,21 @@ describe('selectByType and selectOutcomes', () => {
       other: 0,
       waiting: 1,
     });
+  });
+});
+
+describe('caseSegments', () => {
+  it('splits a case three ways in a fixed order', () => {
+    const segments = caseSegments([
+      release('a', 'released'),
+      release('b', 'refused'),
+      release('c', 'declined'),
+      release('d', 'pending'),
+    ]);
+    expect(segments.map((s) => [s.id, s.value])).toEqual([
+      ['released', 1],
+      ['stayed', 2],
+      ['waiting', 1],
+    ]);
   });
 });

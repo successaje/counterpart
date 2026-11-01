@@ -206,3 +206,20 @@ export function selectOutcomes(records: readonly Release[]): OutcomeSplit {
   }
   return o;
 }
+
+export interface OutcomeSegment {
+  id: 'released' | 'stayed' | 'waiting';
+  label: string;
+  value: number;
+  tone: 'accent' | 'danger' | 'pending';
+}
+
+/** The three-way split a case is judged by: what left, what stayed, what is still waiting. */
+export function caseSegments(records: readonly Release[]): OutcomeSegment[] {
+  const o = selectOutcomes(records);
+  return [
+    { id: 'released', label: 'left this machine', value: o.released, tone: 'accent' },
+    { id: 'stayed', label: 'stayed', value: o.declined + o.refused + o.other, tone: 'danger' },
+    { id: 'waiting', label: 'waiting for you', value: o.waiting, tone: 'pending' },
+  ];
+}

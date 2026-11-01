@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import { FolderOpen } from 'lucide-react';
 import { useState } from 'react';
 import { CaseRow } from '../components/CaseRow.js';
-import { selectCases, selectPending } from '../lib/state.js';
+import { selectCases, selectPending, selectRecords } from '../lib/state.js';
 import { useDesk } from '../lib/store.js';
 import { Page } from './Page.js';
 
@@ -52,6 +52,7 @@ export function Cases() {
               key={c.id}
               c={c}
               pending={pending.filter((p) => p.request.caseId === c.id).length}
+              records={selectRecords(state, c.id)}
             />
           ))}
         </div>

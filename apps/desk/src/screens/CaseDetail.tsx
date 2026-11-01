@@ -16,7 +16,6 @@ import {
   PrincipalChip,
   RelativeTime,
   Section,
-  type Segment,
   SkeletonLines,
   StackedBar,
   Stepper,
@@ -28,7 +27,7 @@ import { Link, useParams } from 'react-router';
 import { ApprovalCard } from '../components/ApprovalCard.js';
 import { CopyButton } from '../components/CopyButton.js';
 import { RecordCard } from '../components/RecordCard.js';
-import { selectOutcomes, selectRecords } from '../lib/state.js';
+import { caseSegments, selectOutcomes, selectRecords } from '../lib/state.js';
 import { useDesk } from '../lib/store.js';
 import { caseTimeline } from '../lib/timeline.js';
 import { Page } from './Page.js';
@@ -66,16 +65,7 @@ export function CaseDetail() {
   const timeline = useMemo(() => (c ? caseTimeline(c, records) : []), [c, records]);
   const outcomes = selectOutcomes(records);
   const redactions = records.reduce((n, r) => n + (r.redaction?.total ?? 0), 0);
-  const segments: Segment[] = [
-    { id: 'released', label: 'left this machine', value: outcomes.released, tone: 'accent' },
-    {
-      id: 'stayed',
-      label: 'stayed',
-      value: outcomes.declined + outcomes.refused + outcomes.other,
-      tone: 'danger',
-    },
-    { id: 'waiting', label: 'waiting for you', value: outcomes.waiting, tone: 'pending' },
-  ];
+  const segments = caseSegments(records);
 
   if (!state.loaded) {
     return (
