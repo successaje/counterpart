@@ -131,6 +131,7 @@
 
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --animate-enter: enter 220ms var(--ease-out-quart) both;
+  --animate-leave: leave 260ms var(--ease-out-quart) both;
   --animate-pulse-dot: pulse-dot 1.4s ease-in-out infinite;
   --animate-working: working 1.1s ease-in-out infinite;
 
@@ -142,6 +143,16 @@
     to {
       opacity: 1;
       transform: none;
+    }
+  }
+  @keyframes leave {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.985);
     }
   }
   @keyframes pulse-dot {

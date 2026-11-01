@@ -1,8 +1,18 @@
 import type { Release } from '@counterpart/protocol';
-import { Button, Card, Dialog, Field, RecordStatusPill, Textarea } from '@counterpart/ui';
-import { Check, ShieldCheck, X } from 'lucide-react';
-import { useState } from 'react';
+import {
+  Button,
+  Card,
+  Dialog,
+  durationLabel,
+  Field,
+  Kbd,
+  RecordStatusPill,
+  Textarea,
+} from '@counterpart/ui';
+import { Check, Clock, ShieldCheck, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import { useShortcuts } from '../lib/shortcuts.js';
 import { useDesk } from '../lib/store.js';
 import { RequestPath } from './RequestPath.js';
 import { RequestEffect, RequestQuote, RequestTitle, RequestWho } from './RequestSummary.js';
@@ -13,13 +23,31 @@ import { RequestEffect, RequestQuote, RequestTitle, RequestWho } from './Request
  * decisions. The path under the request shows where it is on its way from
  * the room to the agent; after "allow" it moves along until the release lands.
  */
-export function ApprovalCard({ record }: { record: Release }) {
+export function ApprovalCard({
+  record,
+  hotkeys = false,
+}: {
+  record: Release;
+  /** Bind a / c / d to this card: the first one waiting. */
+  hotkeys?: boolean;
+}) {
   const { state, decide } = useDesk();
   const [declining, setDeclining] = useState(false);
   const [note, setNote] = useState('');
   const busy = Boolean(state.deciding[record.id]) || record.status === 'collecting';
   const c = state.cases[record.request.caseId];
   const type = record.request.type;
+  const pending = record.status === 'pending';
+  const expiresAt = Date.parse(record.createdAt) + (state.info?.limits.approvalWaitMs ?? 0);
+
+  useShortcuts(
+    {
+      a: () => void decide(record.id, 'allowed-once'),
+      c: () => (type !== 'other' ? void decide(record.id, 'allowed-for-case') : undefined),
+      d: () => setDeclining(true),
+    },
+    hotkeys && pending && !busy,
+  );
 
   return (
     <Card
@@ -32,6 +60,7 @@ export function ApprovalCard({ record }: { record: Release }) {
           <RequestWho record={record} />
         </div>
         <div className="flex items-center gap-2">
+          {pending && state.info ? <Expiry at={expiresAt} /> : null}
           <RecordStatusPill status={record.status as 'pending' | 'collecting'} />
           {c ? (
             <Link
@@ -61,7 +90,7 @@ export function ApprovalCard({ record }: { record: Release }) {
             busy={busy}
             onClick={() => void decide(record.id, 'allowed-once')}
           >
-            Allow once
+            Allow once{hotkeys ? <Kbd>a</Kbd> : null}
           </Button>
           {type !== 'other' ? (
             <Button
@@ -71,7 +100,7 @@ export function ApprovalCard({ record }: { record: Release }) {
               onClick={() => void decide(record.id, 'allowed-for-case')}
               title="Allow this and every later request of the same type on this case"
             >
-              Allow for this case
+              Allow for this case{hotkeys ? <Kbd>c</Kbd> : null}
             </Button>
           ) : null}
           <Button
@@ -82,7 +111,7 @@ export function ApprovalCard({ record }: { record: Release }) {
             onClick={() => setDeclining(true)}
             className="ml-auto"
           >
-            Decline
+            Decline{hotkeys ? <Kbd>d</Kbd> : null}
           </Button>
         </div>
       )}
@@ -123,5 +152,26 @@ export function ApprovalCard({ record }: { record: Release }) {
         </Field>
       </Dialog>
     </Card>
+  );
+}
+
+/** "expires in 9 min": a request nobody decides lapses after limits.approvalWaitMs. */
+function Expiry({ at }: { at: number }) {
+  const [, tick] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => tick((n) => n + 1), 15_000);
+    return () => clearInterval(t);
+  }, []);
+  const left = at - Date.now();
+  if (!Number.isFinite(left)) return null;
+  const soon = left < 2 * 60_000;
+  return (
+    <span
+      className={`inline-flex items-center gap-1 text-2xs ${soon ? 'text-danger' : 'text-ink-faint'}`}
+      title={`Expires ${new Date(at).toLocaleTimeString()}`}
+    >
+      <Clock className="size-3" aria-hidden />
+      {left <= 0 ? 'expiring' : `expires in ${durationLabel(left)}`}
+    </span>
   );
 }

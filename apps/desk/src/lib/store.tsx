@@ -9,6 +9,7 @@ import {
   useMemo,
   useReducer,
   useRef,
+  useState,
 } from 'react';
 import { ApiError, api, readTokenFromLocation, subscribe } from './api.js';
 import { type Action, type DeskState, initialState, reduce } from './state.js';
@@ -22,6 +23,8 @@ interface DeskApi {
     note?: string,
   ): Promise<void>;
   revokeTrust(caseId: string, type: EvidenceType): Promise<void>;
+  /** Drop the event stream and open a new one, then refetch. */
+  reconnect(): void;
   dispatch(action: Action): void;
 }
 
@@ -37,6 +40,7 @@ export function DeskProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reduce, initialState);
   const toast = useToast();
   const unsubscribe = useRef<(() => void) | null>(null);
+  const [session, setSession] = useState(0);
 
   const refresh = useCallback(async () => {
     try {
@@ -54,6 +58,15 @@ export function DeskProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     readTokenFromLocation();
     void refresh();
+    // `counterpart desk` may land a new #token in a tab that is already open.
+    const onHash = () => {
+      if (!window.location.hash.includes('token=')) return;
+      readTokenFromLocation();
+      setSession((n) => n + 1);
+      void refresh();
+    };
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
   }, [refresh]);
 
   // Live updates. Reconnect only when authorisation changes; refetch after
@@ -65,12 +78,20 @@ export function DeskProvider({ children }: { children: ReactNode }) {
   }, [state.loaded]);
   useEffect(() => {
     if (!authorized) return;
+    if (session > 0) dispatch({ type: 'connection', connection: 'connecting' });
     let opens = 0;
+    let probed = 0;
     const off = subscribe(
       (event) => dispatch({ type: 'event', event }),
       (live) => {
         dispatch({ type: 'connection', connection: live ? 'live' : 'offline' });
         if (live && opens++ > 0 && loadedRef.current) void refresh();
+        // A stream cannot tell a dead server from a rotated token; a plain
+        // request can, and lands on the Connect screen when it is the token.
+        if (!live && Date.now() - probed > 10_000) {
+          probed = Date.now();
+          void refresh();
+        }
       },
     );
     unsubscribe.current = off;
@@ -78,7 +99,12 @@ export function DeskProvider({ children }: { children: ReactNode }) {
       off();
       unsubscribe.current = null;
     };
-  }, [authorized, refresh]);
+  }, [authorized, refresh, session]);
+
+  const reconnect = useCallback(() => {
+    setSession((n) => n + 1);
+    void refresh();
+  }, [refresh]);
 
   const decide = useCallback<DeskApi['decide']>(
     async (recordId, decision, note) => {
@@ -118,8 +144,8 @@ export function DeskProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo<DeskApi>(
-    () => ({ state, refresh, decide, revokeTrust, dispatch }),
-    [state, refresh, decide, revokeTrust],
+    () => ({ state, refresh, decide, revokeTrust, reconnect, dispatch }),
+    [state, refresh, decide, revokeTrust, reconnect],
   );
   return <DeskContext.Provider value={value}>{children}</DeskContext.Provider>;
 }

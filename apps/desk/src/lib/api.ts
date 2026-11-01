@@ -150,12 +150,19 @@ export const api = {
  * Server-sent events. EventSource cannot set headers, so the token goes in
  * the query string; the server accepts either.
  */
+/** The server pings every 15s; silence for longer than this means the stream is dead. */
+const SILENCE_MS = 40_000;
+
+/**
+ * Live events over SSE. The browser reconnects a dropped stream on its own,
+ * but not every drop is noticed promptly, so a watchdog treats a stream
+ * that has gone quiet as dead: it reports offline and opens a fresh one.
+ */
 export function subscribe(
   onEvent: (e: DeskEvent) => void,
   onState: (live: boolean) => void,
 ): () => void {
   const token = getToken();
-  const source = new EventSource(`/api/events?token=${encodeURIComponent(token ?? '')}`);
   const names = [
     'case.created',
     'case.updated',
@@ -164,17 +171,50 @@ export function subscribe(
     'approval.requested',
     'approval.decided',
   ];
-  for (const name of names) {
-    source.addEventListener(name, (ev) => {
-      try {
-        onEvent(JSON.parse((ev as MessageEvent).data) as DeskEvent);
-      } catch {
-        // malformed frame
-      }
+  let source: EventSource | null = null;
+  let lastSeen = Date.now();
+  let closed = false;
+
+  const open = () => {
+    source?.close();
+    const es = new EventSource(`/api/events?token=${encodeURIComponent(token ?? '')}`);
+    source = es;
+    const seen = () => {
+      lastSeen = Date.now();
+    };
+    for (const name of names) {
+      es.addEventListener(name, (ev) => {
+        seen();
+        try {
+          onEvent(JSON.parse((ev as MessageEvent).data) as DeskEvent);
+        } catch {
+          // malformed frame
+        }
+      });
+    }
+    es.addEventListener('ping', seen);
+    es.addEventListener('hello', () => {
+      seen();
+      onState(true);
     });
-  }
-  source.addEventListener('hello', () => onState(true));
-  source.onopen = () => onState(true);
-  source.onerror = () => onState(false);
-  return () => source.close();
+    es.onopen = () => {
+      seen();
+      onState(true);
+    };
+    es.onerror = () => onState(false);
+  };
+
+  open();
+  const watchdog = setInterval(() => {
+    if (closed || Date.now() - lastSeen < SILENCE_MS) return;
+    onState(false);
+    lastSeen = Date.now();
+    open();
+  }, 10_000);
+
+  return () => {
+    closed = true;
+    clearInterval(watchdog);
+    source?.close();
+  };
 }
