@@ -232,7 +232,10 @@ export function listen(
         deskUrl: `${url}/#token=${token}`,
         close: () =>
           new Promise<void>((done) => {
+            // close() alone waits for open SSE streams, which never end on
+            // their own; drop every connection so the process can exit.
             server.close(() => done());
+            if ('closeAllConnections' in server) server.closeAllConnections();
           }),
       });
     });
