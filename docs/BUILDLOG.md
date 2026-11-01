@@ -17,4 +17,8 @@ Milestones, newest last. Dates are in IST.
 | 2026-10-30 | Redaction shown in place: alignRedaction and redactedFields in the protocol; the Desk's compare view strikes through what stayed and shows the token that replaced it. (PR #10) |
 | 2026-10-30 | The approval card shows the request's path from the room to the agent, with the owner's decision as the current step. (PR #11) |
 | 2026-11-01 | Every case row carries its outcome bar: what left, what stayed, what is waiting. (PR #12) |
+| 2026-11-01 | Production audit against comparable tools; repository hygiene, release workflow with a pack-and-install check in CI, changelog, Switch integration design. (PR #13) |
+| 2026-11-01 | MCP tool annotations; CLI --json and --no-color. (PR #15) |
+| 2026-11-01 | Desk: shortcuts, notifications, theme, expiry, exit motion, stream watchdog and token-rotation recovery; Playwright end-to-end in CI; runner shutdown fix. (PR #26) |
+| 2026-11-01 | Site: social image, meta tags, documentation links. (PR #27) |
 | 2026-11-04 | Hackathon window opens: Switch server, agents, room template, evidence-protocol document. |

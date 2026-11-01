@@ -9,6 +9,9 @@ updates:
       minor-and-patch:
         update-types: [minor, patch]
     ignore:
+      # Majors are a deliberate upgrade, not a weekly one.
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
       # jsdom 30 needs Node 24.15; the repo supports Node 20.11 and up.
       - dependency-name: jsdom
         versions: [">=30"]
