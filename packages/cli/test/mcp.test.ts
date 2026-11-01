@@ -70,6 +70,22 @@ describe('mcp server', () => {
     expect(client.getInstructions()).toContain('Only the owner approves');
   });
 
+  it('annotates every tool so clients know what reads and what writes', async () => {
+    const tools = (await client.listTools()).tools;
+    for (const t of tools) {
+      expect(t.annotations, t.name).toBeDefined();
+      expect(typeof t.annotations?.readOnlyHint, t.name).toBe('boolean');
+      expect(t.annotations?.destructiveHint, t.name).toBe(false);
+      expect(t.annotations?.openWorldHint, t.name).toBe(false);
+    }
+    const byName = Object.fromEntries(tools.map((t) => [t.name, t.annotations]));
+    expect(byName.counterpart_menu?.readOnlyHint).toBe(true);
+    expect(byName.counterpart_case?.readOnlyHint).toBe(true);
+    expect(byName.counterpart_card?.readOnlyHint).toBe(true);
+    expect(byName.counterpart_collect?.readOnlyHint).toBe(false);
+    expect(byName.counterpart_refuse?.readOnlyHint).toBe(false);
+  });
+
   it('shows the menu', async () => {
     const menu = textOf(await client.callTool({ name: 'counterpart_menu', arguments: {} }));
     expect(menu).toContain('project: sample-app');

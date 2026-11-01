@@ -18,7 +18,12 @@ const program = new Command()
   .name('counterpart')
   .description('Support where both sides bring an agent.')
   .version(version)
+  .option('--no-color', 'plain output (NO_COLOR is honoured too)')
   .showHelpAfterError();
+
+const json = {
+  json: 'print JSON instead of text (releases only; raw evidence never leaves the ledger)',
+};
 
 program
   .command('init')
@@ -67,18 +72,21 @@ program
 program
   .command('info')
   .description('Show the menu, policies and sandbox status as the agent sees them')
-  .action(async () => {
+  .option('--json', json.json)
+  .action(async (opts: { json?: boolean }) => {
     const conn = await openConnection(await requireProjectRoot(), true, 0);
-    console.log(infoText(await conn.handle.info()));
+    const info = await conn.handle.info();
+    console.log(opts.json ? JSON.stringify(info, null, 2) : infoText(info));
     if (conn.mode === 'local') await conn.close();
   });
 
 program
   .command('approvals')
   .description('List requests waiting for your decision')
-  .action(async () => {
+  .option('--json', json.json)
+  .action(async (opts: { json?: boolean }) => {
     const conn = await openConnection(await requireProjectRoot(), false);
-    await listApprovals(conn.handle);
+    await listApprovals(conn.handle, Boolean(opts.json));
   });
 
 program
@@ -86,13 +94,15 @@ program
   .description('Allow a pending request')
   .option('--for-case', 'also trust this evidence type for the rest of the case')
   .option('-m, --note <note>', 'note for the ledger')
-  .action(async (recordId: string, opts: { forCase?: boolean; note?: string }) => {
+  .option('--json', json.json)
+  .action(async (recordId: string, opts: { forCase?: boolean; note?: string; json?: boolean }) => {
     const conn = await openConnection(await requireProjectRoot(), false);
     await decide(
       conn.handle,
       recordId,
       opts.forCase ? 'allowed-for-case' : 'allowed-once',
       opts.note,
+      Boolean(opts.json),
     );
   });
 
@@ -100,9 +110,10 @@ program
   .command('decline <recordId>')
   .description('Decline a pending request')
   .option('-m, --note <note>', 'tell the helpdesk why (goes in the ledger)')
-  .action(async (recordId: string, opts: { note?: string }) => {
+  .option('--json', json.json)
+  .action(async (recordId: string, opts: { note?: string; json?: boolean }) => {
     const conn = await openConnection(await requireProjectRoot(), false);
-    await decide(conn.handle, recordId, 'declined', opts.note);
+    await decide(conn.handle, recordId, 'declined', opts.note, Boolean(opts.json));
   });
 
 program
@@ -118,9 +129,10 @@ program
   .command('cases')
   .description('List cases')
   .option('-a, --all', 'include closed cases')
-  .action(async (opts: { all?: boolean }) => {
+  .option('--json', json.json)
+  .action(async (opts: { all?: boolean; json?: boolean }) => {
     const conn = await openConnection(await requireProjectRoot(), true, 0);
-    await listCases(conn.handle, Boolean(opts.all));
+    await listCases(conn.handle, Boolean(opts.all), Boolean(opts.json));
     if (conn.mode === 'local') await conn.close();
   });
 
@@ -128,9 +140,10 @@ program
   .command('case <caseId>')
   .description('Show a case and its records')
   .option('--full', 'print every released payload')
-  .action(async (caseId: string, opts: { full?: boolean }) => {
+  .option('--json', json.json)
+  .action(async (caseId: string, opts: { full?: boolean; json?: boolean }) => {
     const conn = await openConnection(await requireProjectRoot(), true, 0);
-    await showCase(conn.handle, caseId, Boolean(opts.full));
+    await showCase(conn.handle, caseId, Boolean(opts.full), Boolean(opts.json));
     if (conn.mode === 'local') await conn.close();
   });
 

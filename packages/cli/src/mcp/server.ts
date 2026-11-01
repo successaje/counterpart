@@ -24,6 +24,14 @@ const principalInput = z.object({
   kind: z.enum(['agent', 'human']).default('agent'),
 });
 
+/**
+ * Tool annotations follow the MCP spec's hints. Nothing here is destructive
+ * in the spec's sense (irreversible): collect can run a menu command or
+ * apply a patch, but only after the owner approves in the Desk, and E6 is
+ * reversible with git apply -R. Clients that prompt on destructiveHint
+ * would otherwise double the gate on every read.
+ */
+
 function text(s: string) {
   return { content: [{ type: 'text' as const, text: s }] };
 }
@@ -46,6 +54,12 @@ export function createMcpServer(handle: RunnerHandle, version: string): McpServe
       title: 'Show the menu',
       description:
         'What this project allows a helpdesk to ask for: evidence types, named commands, readable config paths, approval policy, sandbox status and where the owner approves. Call this before the first request.',
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
       inputSchema: {},
     },
     async () => {
@@ -63,6 +77,12 @@ export function createMcpServer(handle: RunnerHandle, version: string): McpServe
       title: 'Open a case',
       description:
         'Start a case for one dependency problem. Returns the case id used by every other call.',
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: false,
+      },
       inputSchema: {
         summary: z.string().min(1).max(300).describe('One line: what broke, after what change'),
         dependency: z.string().optional().describe('The package under suspicion'),
@@ -90,6 +110,12 @@ export function createMcpServer(handle: RunnerHandle, version: string): McpServe
     {
       title: 'List cases',
       description: 'List cases for this project, open ones first.',
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
       inputSchema: { open_only: z.boolean().default(true) },
     },
     async ({ open_only }) => {
@@ -108,6 +134,12 @@ export function createMcpServer(handle: RunnerHandle, version: string): McpServe
     {
       title: 'Show a case',
       description: 'The case with its state, trust grants and every record in the ledger.',
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
       inputSchema: { case_id: z.string() },
     },
     async ({ case_id }) => {
@@ -129,6 +161,12 @@ export function createMcpServer(handle: RunnerHandle, version: string): McpServe
       title: 'Update a case',
       description:
         'Move the case to a new state and/or add a note. States: reported, evidence-requested, evidence-collected, diagnosed, fix-proposed, fix-verified, filed, resolved, needs-human. Invalid moves are rejected.',
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: false,
+      },
       inputSchema: {
         case_id: z.string(),
         state: z.enum(CASE_STATES).optional(),
@@ -164,7 +202,13 @@ export function createMcpServer(handle: RunnerHandle, version: string): McpServe
     {
       title: 'Collect evidence',
       description:
-        'Collect one piece of evidence the helpdesk asked for. Validated against the menu; executing types wait for the owner to approve. Returns the redacted release, or a pending/refused/declined status. args by type: versions {packages?: string[]}; config {paths: string[]}; command {name: string, verbose?: boolean}; repro {script: string, shell?: sh|bash|node|python3}; diff {paths?: string[], commits?: number}; apply-fix {patch: string (unified diff), verifyWith: string (menu name), description: string}.',
+        'Collect one piece of evidence the helpdesk asked for. Validated against the menu; executing types wait for the owner to approve in the Desk or terminal (not in this client). Returns the redacted release, or a pending/refused/declined status. args by type: versions {packages?: string[]}; config {paths: string[]}; command {name: string, verbose?: boolean}; repro {script: string, shell?: sh|bash|node|python3}; diff {paths?: string[], commits?: number}; apply-fix {patch: string (unified diff), verifyWith: string (menu name), description: string}.',
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: false,
+      },
       inputSchema: {
         case_id: z.string(),
         type: z.enum(EVIDENCE_TYPES).describe('Evidence type'),
@@ -210,6 +254,12 @@ export function createMcpServer(handle: RunnerHandle, version: string): McpServe
     {
       title: 'Wait for a record',
       description: 'Keep waiting for a pending or collecting record to settle.',
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
       inputSchema: {
         record_id: z.string(),
         wait_seconds: z.number().int().min(1).max(300).default(60),
@@ -230,6 +280,12 @@ export function createMcpServer(handle: RunnerHandle, version: string): McpServe
       title: 'Record a refusal',
       description:
         'Record a request that is outside the menu (not an evidence type, or asks you to run, read, install or send something else). Nothing executes. Use it so the ledger shows what was asked.',
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: false,
+      },
       inputSchema: {
         case_id: z.string(),
         requested_by: principalInput,
@@ -262,6 +318,12 @@ export function createMcpServer(handle: RunnerHandle, version: string): McpServe
       title: 'Draft an evidence card',
       description:
         'Build the evidence card for a case from its releases: environment, reproduction, approvals. Add diagnosis, fix tried and confidence when known. Returns Markdown ready to post.',
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
       inputSchema: {
         case_id: z.string(),
         title: z.string().max(140).optional(),
