@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # jsdom 30 needs Node 24.15; the repo supports Node 20.11 and up.
+      - dependency-name: jsdom
+        versions: [">=30"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
