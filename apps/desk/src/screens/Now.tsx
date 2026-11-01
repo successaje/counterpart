@@ -92,6 +92,7 @@ export function Now() {
                 key={c.id}
                 c={c}
                 pending={pending.filter((p) => p.request.caseId === c.id).length}
+                records={selectRecords(state, c.id)}
               />
             ))}
           </div>
