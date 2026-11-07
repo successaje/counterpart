@@ -155,12 +155,21 @@ class Stage {
     const total = (Date.now() - this.started) / 1000;
     await this.context.close();
     const webm = await video.path();
-    return { webm, total, steps: this.steps };
+    // The recording starts before the page has loaded and before the first
+    // sentence is ready, so a scene opens on a blank frame. Cut to just
+    // before the first step and shift the sentences with it.
+    const cut = Math.max(0, (this.steps[0]?.at ?? 0) - 0.3);
+    return {
+      webm,
+      total: total - cut,
+      cut,
+      steps: this.steps.map((step) => ({ ...step, at: step.at - cut })),
+    };
   }
 }
 
 // ---------------------------------------------------------------- assembly
-async function assemble(id, { webm, total, steps }) {
+async function assemble(id, { webm, total, cut, steps }) {
   // One audio track: each sentence at the second it was spoken, over silence.
   const inputs = steps.flatMap((s) => ['-i', s.aiff]);
   const delays = steps
@@ -182,6 +191,8 @@ async function assemble(id, { webm, total, steps }) {
     '-i',
     'anullsrc=r=22050:cl=mono',
     ...inputs,
+    '-ss',
+    String(cut),
     '-i',
     webm,
     '-filter_complex',
@@ -621,7 +632,10 @@ try {
     ['08', () => sceneProof(browser, c1)],
     ['09', () => sceneClosing(browser)],
   ];
+  // SCENES=01,02 renders a subset, for checking a scene; later scenes depend on earlier ones.
+  const only = process.env.SCENES?.split(',');
   for (const [id, take] of takes) {
+    if (only && !only.includes(id)) continue;
     console.log(`scene ${id}`);
     const rec = await take();
     parts.push(await assemble(id, rec));
