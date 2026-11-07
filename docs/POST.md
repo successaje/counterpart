@@ -1,5 +1,7 @@
 # Both sides brought an agent
 
+*Published on Medium: [medium.com/@finishr/both-sides-brought-an-agent-building-counterpart-with-switch-dcb7474c37ec](https://medium.com/@finishr/both-sides-brought-an-agent-building-counterpart-with-switch-dcb7474c37ec).*
+
 *What happens when a maintainer’s AI agent and a developer’s AI agent try to solve a bug together, without either person handing over their machine?*
 
 You upgrade a library, and something breaks.

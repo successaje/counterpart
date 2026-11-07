@@ -26,7 +26,7 @@ The shared room runs on [Switch](https://github.com/sandbox-quantum/switch), the
 
 **Contents.** [The problem](#the-problem) · [What Counterpart does](#what-counterpart-does) · [How it works](#how-it-works) · [Repository](#repository) · [Install and use](#install-and-use-reporter) · [Switch integration](#switch-integration) · [Demo](#demo) · [Development](#development) · [Security model](#security-model-in-one-paragraph) · [Hackathon notes](#hackathon-notes) · [License](#license)
 
-Site: [successaje.github.io/counterpart](https://successaje.github.io/counterpart/) · Also: [CHANGELOG](CHANGELOG.md) · [SECURITY](SECURITY.md) · [CONTRIBUTING](CONTRIBUTING.md) · [docs/SWITCH.md](docs/SWITCH.md) (the integration design, and what was built from it) · [docs/PRODUCTION-AUDIT.md](docs/PRODUCTION-AUDIT.md) (how it compares, and what was fixed) · [docs/POST.md](docs/POST.md) (the hackathon write-up)
+Site: [successaje.github.io/counterpart](https://successaje.github.io/counterpart/) · Also: [CHANGELOG](CHANGELOG.md) · [SECURITY](SECURITY.md) · [CONTRIBUTING](CONTRIBUTING.md) · [docs/SWITCH.md](docs/SWITCH.md) (the integration design, and what was built from it) · [docs/PRODUCTION-AUDIT.md](docs/PRODUCTION-AUDIT.md) (how it compares, and what was fixed) · [docs/POST.md](docs/POST.md) (the hackathon write-up, [published on Medium](https://medium.com/@finishr/both-sides-brought-an-agent-building-counterpart-with-switch-dcb7474c37ec))
 
 ## The problem
 

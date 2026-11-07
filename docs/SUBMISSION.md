@@ -54,9 +54,7 @@ Leave blank. Not entering Best Core Contribution.
 
 ### Blog post
 
-[Medium link to "Both sides brought an agent"]
-
-The text is in `docs/POST.md`. Publish it on Medium first, then paste the link here.
+https://medium.com/@finishr/both-sides-brought-an-agent-building-counterpart-with-switch-dcb7474c37ec
 
 ### Your Wispr usage card
 
@@ -109,9 +107,8 @@ I stood up Switch on my own machine, sent both templates to its validator, and g
 
 ## Before you press submit
 
-1. **Publish the post** on Medium and paste the link above and at the end of `docs/POST.md`.
-2. **Post the #HowISwitch text** and paste its link above.
-3. **Deadline:** 7 November, 11:59 PM IST.
+1. **Post the #HowISwitch text** and paste its link above.
+2. **Deadline:** 7 November, 11:59 PM IST.
 
 ## YouTube upload
 
@@ -130,7 +127,7 @@ Counterpart puts a project's helpdesk and the reporter's own agent in one Switch
 Built on SandboxAQ's Switch for the WeMakeDevs Flip the Switch hackathon, 4–7 November 2026.
 
 Code (Apache-2.0): https://github.com/successaje/counterpart
-Write-up: [Medium link]
+Write-up: https://medium.com/@finishr/both-sides-brought-an-agent-building-counterpart-with-switch-dcb7474c37ec
 Switch: https://github.com/sandbox-quantum/switch
 
 Chapters:
