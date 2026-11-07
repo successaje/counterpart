@@ -23,7 +23,8 @@
     "release:publish": "pnpm -r --filter @counterpart/protocol --filter @counterpart/runner --filter @counterpart/desk --filter counterpart publish --access public --no-git-checks",
     "version:set": "node scripts/version-set.mjs",
     "demo": "pnpm --filter @counterpart/desk build && node scripts/desk-dev-server.mjs",
-    "og:render": "node scripts/og/render.mjs"
+    "og:render": "node scripts/og/render.mjs",
+    "switch:sim": "node switch/sim/room.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.4",

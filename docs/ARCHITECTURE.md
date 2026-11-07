@@ -93,6 +93,6 @@ apps/desk            local web app, built into the cli package
 apps/web             public site
 examples/            sample projects used in the demo
 scripts/             desk-dev-server.mjs: a seeded runner for Desk development
-switch/              room templates, agent instructions, server overlay (built during the hackathon window)
+switch/              the Switch room: two templates, two briefs, room documents, self-host overlay, simulation
 docs/                this folder
 ```

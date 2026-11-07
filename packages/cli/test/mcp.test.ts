@@ -218,9 +218,35 @@ describe('init', () => {
       fs.readFile(path.join(dir, '.gitignore'), 'utf8'),
     );
     expect(ignore).toContain('.counterpart/evidence/');
-    expect(lines.join('\n')).toContain('claude mcp add counterpart');
+    expect(lines.join('\n')).toContain('.mcp.json');
+    const mcp = JSON.parse(
+      await import('node:fs/promises').then((fs) =>
+        fs.readFile(path.join(dir, '.mcp.json'), 'utf8'),
+      ),
+    ) as { mcpServers: Record<string, { command: string; args: string[] }> };
+    expect(mcp.mcpServers.counterpart).toEqual({ command: 'counterpart', args: ['mcp'] });
     const again = await runInit({ cwd: dir, log: (l) => lines.push(l) });
     expect(again.created).toBe(false);
+    await rm(dir, { recursive: true, force: true });
+  });
+
+  it('adds the MCP server to an existing .mcp.json and keeps the rest', async () => {
+    const dir = await project();
+    await writeFile(
+      path.join(dir, '.mcp.json'),
+      JSON.stringify({ mcpServers: { github: { command: 'gh-mcp' } } }),
+    );
+    const { ensureMcpConfig } = await import('../src/commands/init.js');
+    expect(await ensureMcpConfig(dir)).toBe('updated');
+    expect(await ensureMcpConfig(dir)).toBe('kept');
+    const mcp = JSON.parse(
+      await import('node:fs/promises').then((fs) =>
+        fs.readFile(path.join(dir, '.mcp.json'), 'utf8'),
+      ),
+    ) as { mcpServers: Record<string, unknown> };
+    expect(Object.keys(mcp.mcpServers).sort()).toEqual(['counterpart', 'github']);
+    await writeFile(path.join(dir, '.mcp.json'), '{ not json');
+    await expect(ensureMcpConfig(dir)).rejects.toThrow('not valid JSON');
     await rm(dir, { recursive: true, force: true });
   });
 });

@@ -23,6 +23,31 @@ async function ensureGitignore(root: string): Promise<boolean> {
   return true;
 }
 
+/**
+ * `.mcp.json` is how a coding agent started in this folder gets the runner:
+ * Claude Code reads it as the project's MCP servers, and an agent Switch
+ * Console runs here inherits it. Other servers in the file are kept.
+ */
+export async function ensureMcpConfig(root: string): Promise<'created' | 'updated' | 'kept'> {
+  const file = path.join(root, '.mcp.json');
+  const entry = { command: 'counterpart', args: ['mcp'] };
+  let current: { mcpServers?: Record<string, unknown> } = {};
+  let existed = false;
+  if (await exists(file)) {
+    existed = true;
+    try {
+      current = JSON.parse(await readFile(file, 'utf8')) as typeof current;
+    } catch {
+      throw new Error(`${file} is not valid JSON; fix or remove it, then run init again`);
+    }
+  }
+  const servers = current.mcpServers ?? {};
+  if (servers.counterpart) return 'kept';
+  const next = { ...current, mcpServers: { ...servers, counterpart: entry } };
+  await writeFile(file, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
+  return existed ? 'updated' : 'created';
+}
+
 export async function runInit(opts: InitOptions): Promise<{ root: string; created: boolean }> {
   const log = opts.log ?? ((l: string) => console.log(l));
   const root = path.resolve(opts.cwd);
@@ -49,6 +74,7 @@ export async function runInit(opts: InitOptions): Promise<{ root: string; create
   await mkdir(paths.dir, { recursive: true });
   await saveConfig(paths, config);
   const ignored = await ensureGitignore(root);
+  const mcp = await ensureMcpConfig(root);
 
   log(`${ui.ok('✓')} Counterpart is set up for ${ui.title(config.project.name)}.`);
   log(
@@ -79,7 +105,7 @@ export async function runInit(opts: InitOptions): Promise<{ root: string; create
     `  1. Review ${ui.code('.counterpart/runner.yaml')} and commit it${ignored ? ` (${ui.dim('.gitignore updated')})` : ''}.`,
   );
   log(
-    `  2. Register the MCP server with your agent:  ${ui.code('claude mcp add counterpart -- counterpart mcp')}`,
+    `  2. Your agent gets the MCP server from ${ui.code('.mcp.json')} (${mcp}): Claude Code reads it here, and so does an agent Switch runs in this folder. Elsewhere: ${ui.code('claude mcp add counterpart -- counterpart mcp')}`,
   );
   log(`  3. When a case starts, open the Desk:         ${ui.code('counterpart desk')}`);
   return { root, created: true };

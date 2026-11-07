@@ -18,7 +18,7 @@ Your coding agent and a project's helpdesk agent work a dependency bug in one sh
 
 The shared room runs on [Switch](https://github.com/sandbox-quantum/switch), the open-source layer that lets agents owned by different people meet in one channel and address each other.
 
-> **Status.** Pre-release, built in the open for the WeMakeDevs [Flip the Switch](https://www.wemakedevs.org/hackathons/switch) hackathon (4–7 November 2026). The local tooling in this repository is complete and tested. The Switch rooms, templates and agent setup are built during the hackathon window, as the rules require; see [Switch integration](#switch-integration).
+> **Status.** Pre-release, built in the open for the WeMakeDevs [Flip the Switch](https://www.wemakedevs.org/hackathons/switch) hackathon (4–7 November 2026). The local tooling is complete and tested; the Switch room, its templates and agents were built inside the window, as the rules require; see [Switch integration](#switch-integration).
 
 <p align="center">
   <img src="docs/images/desk-now.jpg" width="880" alt="The Desk showing one request waiting for approval: E3 command test, asked by cachekit-helpdesk, with what will run, the request's path from the room to the agent paused at your decision, and three decisions" />
@@ -138,10 +138,12 @@ The ledger lives next to it: `.counterpart/state/` (cases, server record) and `.
 
 Counterpart's room is a Switch room with two agents owned by two people:
 
-- **`helpdesk`**, owned by the project. Registered by a maintainer on the project's machine with the library checkout. Addressing policy `anyone`, so reporters' agents can talk to it. Auto mode on; it asks for evidence, reproduces in its own sandbox, keeps the case ledger as a room document, and files issues with `gh`.
-- **`dev-agent`**, owned by the reporter. Runs on the reporter's laptop with the `counterpart` MCP server. Addressing policy: its owner, the `helpdesk` agent, and the support room. Auto mode off: every executing evidence type goes through the Desk, and Switch's own permission cards are a second layer on top.
+- **`<project>-helpdesk`**, owned by the project. Created by a maintainer from [`switch/support-room.template.yaml`](switch/support-room.template.yaml), on the maintainer's machine, with the repository cloned into its directory. Addressing `anyone`, so reporters and their agents can ask it. Auto mode on: it asks for evidence by name, reproduces in its own checkout, keeps the case ledger as a room document, and files issues with `gh` once a bug is reproduced. Its brief is [`switch/helpdesk.md`](switch/helpdesk.md).
+- **`dev-agent`**, owned by the reporter. Created by the reporter from [`switch/dev-agent.template.yaml`](switch/dev-agent.template.yaml), in the reporter's project, where `counterpart init` has written `.mcp.json`; that is how it gets the runner. Addressing: its owner and the helpdesk, in the support room, and nobody else. Auto mode off: every executing evidence type stops in the Desk, and Switch's own permission prompt in the room is a second gate the owner answers. Its brief is [`switch/dev-agent.md`](switch/dev-agent.md).
 
-The room template (`switch/`), the two agents' instructions and the self-hosted server overlay are built during the hackathon window and land in this repository then, with the demo video and the README section that explains them. The design they follow is written down now in [docs/SWITCH.md](docs/SWITCH.md). Why Switch is structural: it is the only shipped layer where agents owned by different people run on their owners' machines and address each other in one channel, with permission cards and a record of who decided what. Without it there is no room, no cross-owner addressing and no second agent.
+The same template creates the `#<project>-support` room with two documents attached: the [evidence protocol](switch/evidence-protocol.md) (the six types, what each returns, the two rules) and the [case ledger](switch/case-ledger.md) the helpdesk maintains. [`switch/README.md`](switch/README.md) walks both sides through the setup, [`switch/self-host`](switch/self-host) brings up a pinned Switch with one script, and `pnpm switch:sim` plays the demo conversation against the real MCP server, with checks, in CI. [docs/SWITCH.md](docs/SWITCH.md) is the design and what was checked against Switch's documentation.
+
+Why Switch is structural: it is the only shipped layer where agents owned by different people run on their owners' machines and address each other in one channel, with addressing policies each owner sets, permission prompts, and a record of who decided what. Without it there is no room, no cross-owner addressing and no second agent.
 
 ## Demo
 
@@ -227,7 +229,7 @@ The runner reduces risk; it does not make a hostile helpdesk harmless. Commands 
 
 ## Hackathon notes
 
-Built during the hackathon window (4–7 November 2026 IST): the Switch server deployment, the two agents' registration and instructions, the room template, the evidence-protocol room document, the demo video and the blog post. Built before it, as the rules allow for existing libraries and tools: everything in this repository as of the dates in the git history. The build log is in [docs/BUILDLOG.md](docs/BUILDLOG.md).
+Built during the hackathon window (4–7 November 2026 IST): everything under `switch/` (the self-hosted Switch, the two templates and briefs, the room documents, the simulation), `.mcp.json` from `counterpart init`, the demo video and the blog post. Built before it, as the rules allow for existing libraries and tools: everything else in this repository, as of the dates in the git history. The build log is in [docs/BUILDLOG.md](docs/BUILDLOG.md).
 
 ## License
 

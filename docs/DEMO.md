@@ -4,8 +4,9 @@ Three minutes. Two laptops on screen, or one laptop and a VM: the reporter's (De
 
 ## Setup, off camera
 
-- Project side: a Switch server, the `helpdesk` agent registered with the `cachekit` checkout and `gh` logged in, the `#cachekit-support` room from the template with the evidence-protocol document attached.
-- Reporter side: `examples/sample-app` with `cachekit` upgraded to 3.2.0, `counterpart init` done, `dev-agent` registered on the reporter's laptop with the `counterpart` MCP server, `counterpart desk` open.
+- Project side: a Switch server (`switch/self-host/up.sh`), then `switch/support-room.template.yaml` run in Switch Console: it creates `cachekit-helpdesk` with the repository cloned, and `#cachekit-support` with the evidence-protocol and case-ledger documents. `gh auth login` on that machine.
+- Reporter side: `examples/sample-app` with `cachekit` upgraded to 3.2.0, `counterpart init` done (it writes `.mcp.json`), `switch/dev-agent.template.yaml` run in Switch Console on the reporter's laptop, the helpdesk added under the agent's Custom rules, `counterpart desk` open. The whole walk-through is `switch/README.md`.
+- A dry run without Switch: `pnpm switch:sim` plays the same conversation against the real MCP server and prints it as a transcript.
 
 ## Context (0:00–0:25)
 

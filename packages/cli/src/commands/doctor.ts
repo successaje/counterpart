@@ -97,6 +97,28 @@ export async function runDoctor(
       : '.counterpart/evidence is not ignored; raw evidence could be committed',
   });
 
+  let mcpJson = '';
+  try {
+    mcpJson = await readFile(path.join(root, '.mcp.json'), 'utf8');
+  } catch {
+    // absent
+  }
+  const wired = (() => {
+    try {
+      const parsed = JSON.parse(mcpJson) as { mcpServers?: Record<string, unknown> };
+      return Boolean(parsed.mcpServers?.counterpart);
+    } catch {
+      return false;
+    }
+  })();
+  checks.push({
+    name: '.mcp.json',
+    ok: wired ? true : 'warn',
+    detail: wired
+      ? 'counterpart mcp is registered for agents started here'
+      : 'no counterpart entry; `counterpart init` adds one, or register the server with your agent by hand',
+  });
+
   const desk = await resolveDeskDir();
   checks.push({
     name: 'Desk build',

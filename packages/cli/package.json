@@ -27,17 +27,17 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@counterpart/desk": "workspace:*",
     "@counterpart/protocol": "workspace:*",
     "@counterpart/runner": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.32.2",
     "commander": "^15.0.0",
     "picocolors": "^1.1.1",
-    "yaml": "^2.9.1",
-    "zod": "^4.0.0",
-    "@counterpart/desk": "workspace:*"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0"
+    "@types/node": "^24.0.0",
+    "yaml": "^2.9.1"
   },
   "repository": {
     "type": "git",

@@ -6,6 +6,9 @@ All notable changes to Counterpart. The format follows [Keep a Changelog](https:
 
 ### Added
 
+- The Switch room, in `switch/`: `support-room.template.yaml` (the project's helpdesk and the `#<project>-support` room with the evidence-protocol and case-ledger documents) and `dev-agent.template.yaml` (the reporter's agent in the reporter's project, auto mode off, joining the room), both in Switch's template language and checked against it by a test; the two briefs; a pinned self-hosted Switch (`switch/self-host`); and `pnpm switch:sim`, the demo conversation played against the real MCP server, run in CI.
+- `counterpart init` writes `.mcp.json` so a coding agent started in the project, by hand or by Switch, gets the runner; `counterpart doctor` checks it.
+
 - Site: a generated 1200×630 social image, Open Graph and Twitter tags, a canonical URL, `robots.txt`, and footer links to the documentation ([#27](https://github.com/successaje/counterpart/pull/27)).
 - Desk: keyboard shortcuts (`a`/`c`/`d` on the first waiting request, `g` then `n`/`c`/`l`/`m`, `?` for the sheet), tab title badge, opt-in desktop notifications, a system/light/dark switch, expiry on waiting cards, an exit transition for settled cards, a stream watchdog with retry, automatic landing on the Connect screen after a token rotation, a skip link ([#26](https://github.com/successaje/counterpart/pull/26)).
 - Playwright end-to-end tests for the Desk against the seeded runner, desktop and phone, run in CI ([#26](https://github.com/successaje/counterpart/pull/26)).
@@ -20,6 +23,7 @@ All notable changes to Counterpart. The format follows [Keep a Changelog](https:
 
 ### Fixed
 
+- Redaction: the per-user hash in a macOS temp path (`/var/folders/xx/<hash>/T/…`) now leaves as `«redacted:user»`, like a home directory. Found by the room simulation.
 - `counterpart desk` hung on Ctrl-C while a Desk tab was open: closing the server waited for the event stream. It now drops every connection and exits at once ([#26](https://github.com/successaje/counterpart/pull/26)).
 
 ## 0.1.0 · 2026-10-28

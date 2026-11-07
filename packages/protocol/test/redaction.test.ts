@@ -49,6 +49,17 @@ describe('redactText', () => {
     expect(counts.path).toBe(1);
   });
 
+  it('redacts the per-user part of a macOS temp directory', () => {
+    const { text, counts } = redactText(
+      "ENOENT: open '/var/folders/7j/g1306fq118d6kjb2tb49mg6m0000gn/T/sample-app-CcQ7NT/.cache/index.json' and /private/var/folders/7j/g1306fq118d6kjb2tb49mg6m0000gn/C/x",
+      rules,
+    );
+    expect(text).toBe(
+      `ENOENT: open '/var/folders/${token('user')}/T/sample-app-CcQ7NT/.cache/index.json' and /private/var/folders/${token('user')}/C/x`,
+    );
+    expect(counts.path).toBe(2);
+  });
+
   it('leaves loopback and version strings alone', () => {
     const { text } = redactText(
       'listening on 127.0.0.1 with cachekit 3.2.0 and node 24.2.0 build 1.2.3.4.5',

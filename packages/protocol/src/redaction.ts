@@ -122,6 +122,14 @@ export const BUILTIN_RULES: readonly CompiledRule[] = [
     pattern: /([A-Za-z]:\\Users\\)([^\\\s"'`]+)/g,
     replacement: `$1${token('user')}`,
   },
+  {
+    // macOS keeps each user's temp directory under /var/folders/<2 chars>/<hash>/;
+    // the hash identifies the account as surely as the home directory does.
+    id: 'macos-user-tmpdir',
+    category: 'path',
+    pattern: /(\/(?:private\/)?var\/folders\/)[^/\s"'`]+\/[^/\s"'`]+/g,
+    replacement: `$1${token('user')}`,
+  },
 ];
 
 function escapeRegExp(s: string): string {

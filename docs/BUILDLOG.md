@@ -21,4 +21,5 @@ Milestones, newest last. Dates are in IST.
 | 2026-11-01 | MCP tool annotations; CLI --json and --no-color. (PR #15) |
 | 2026-11-01 | Desk: shortcuts, notifications, theme, expiry, exit motion, stream watchdog and token-rotation recovery; Playwright end-to-end in CI; runner shutdown fix. (PR #26) |
 | 2026-11-01 | Site: social image, meta tags, documentation links. (PR #27) |
-| 2026-11-04 | Hackathon window opens: Switch server, agents, room template, evidence-protocol document. |
+| 2026-11-01 | Dependabot's seven green bumps merged; the four majors closed by config. |
+| 2026-11-07 | The Switch integration, inside the window: `switch/` with the support-room and dev-agent templates in Switch's template language, both briefs, the evidence-protocol and case-ledger room documents, a pinned self-host overlay, `counterpart init` writing `.mcp.json`, and the support room simulated against the real MCP server in CI. The simulation found a redaction gap (macOS per-user temp paths), fixed in the protocol. |
