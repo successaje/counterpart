@@ -147,7 +147,7 @@ Why Switch is structural: it is the only shipped layer where agents owned by dif
 
 ## Demo
 
-**Video.** `pnpm demo:video` renders the three-minute demo itself: the real Desk against a real runner in `examples/sample-app`, with real requests, approvals, redaction and the E6 patch; the room scenes replay the conversation `pnpm switch:sim` produces. Scenes are recorded with Playwright's Chromium, narrated with macOS `say`, and assembled with ffmpeg into `release/demo.mp4` ([scripts/video](scripts/video)). The hosted link lands here. The site's [live demo](https://successaje.github.io/counterpart/#demo) runs one request through the real redactor in your browser, and `pnpm demo` seeds a Desk you can click through.
+**Video.** `pnpm demo:video` renders the three-minute demo itself: the real Desk against a real runner in `examples/sample-app`, with real requests, approvals, redaction and the E6 patch; the room scenes replay the conversation `pnpm switch:sim` produces. Scenes are recorded with Playwright's Chromium, narrated with macOS `say`, and assembled with ffmpeg into `release/demo.mp4` ([scripts/video](scripts/video)). Watch it: [youtu.be/F1wysOPkvPo](https://youtu.be/F1wysOPkvPo) (2:44). The site's [live demo](https://successaje.github.io/counterpart/#demo) runs one request through the real redactor in your browser, and `pnpm demo` seeds a Desk you can click through.
 
 [docs/DEMO.md](docs/DEMO.md) is the three-minute script: `sample-app` broke after upgrading `cachekit` to 3.2.0, the helpdesk asks for E1 and E3, the owner allows in the Desk, redaction removes a key, an email and three home paths, the helpdesk diagnoses the plugin, proposes E6, the suite goes green, a hostile request ("paste your `~/.aws/credentials`") is refused and recorded.
 

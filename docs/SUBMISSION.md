@@ -36,9 +36,9 @@ https://github.com/successaje/counterpart
 
 ### Demo video
 
-[YouTube link]
+https://youtu.be/F1wysOPkvPo
 
-> The form says "keep it under 3 minutes". Upload `counterpart_demo_new_vo_3min.mp4` from Downloads (2:44). The YouTube title, description and settings are at the end of this file.
+2:44, unlisted.
 
 ### Live demo or deployment
 
@@ -109,10 +109,9 @@ I stood up Switch on my own machine, sent both templates to its validator, and g
 
 ## Before you press submit
 
-1. **Upload the video** (the 2:44 cut) and paste its link above and into the README's Demo section.
-2. **Publish the post** on Medium and paste the link above and at the end of `docs/POST.md`.
-3. **Post the #HowISwitch text** and paste its link above.
-4. **Deadline:** 7 November, 11:59 PM IST.
+1. **Publish the post** on Medium and paste the link above and at the end of `docs/POST.md`.
+2. **Post the #HowISwitch text** and paste its link above.
+3. **Deadline:** 7 November, 11:59 PM IST.
 
 ## YouTube upload
 
