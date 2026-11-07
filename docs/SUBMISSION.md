@@ -32,7 +32,7 @@ It is for the people on both sides of a bug report: the maintainer of a library 
 
 https://github.com/successaje/counterpart
 
-> The form requires a public repository for Track 1 and 2. The repository is private at the time of writing; it has to be public before this link is submitted. The README explains setup from a clean clone, and CI runs the full check on every push.
+> Public, as the form requires. The README explains setup from a clean clone, and CI runs the full check on every push.
 
 ### Demo video
 
@@ -42,7 +42,9 @@ https://github.com/successaje/counterpart
 
 ### Live demo or deployment
 
-Leave blank, unless GitHub Pages is enabled for the repository before submitting. Then: https://successaje.github.io/counterpart/
+https://successaje.github.io/counterpart/
+
+The product site, with the loop animated and a demo of one request that runs in the browser: the room, the Desk, the redaction, the release. The Desk itself runs on localhost by design.
 
 ## Part 2 of 3, Track Details
 
@@ -107,12 +109,10 @@ I stood up Switch on my own machine, sent both templates to its validator, and g
 
 ## Before you press submit
 
-1. **Video.** Upload the 2:44 cut, then paste its link above.
-2. **Public repository.** The form requires it for Track 1.
-3. **Upload the video** and paste its link above and into the README's Demo section.
-4. **Publish the post** on Medium and paste the link above and at the end of `docs/POST.md`.
-5. **Post the #HowISwitch text** and paste its link above.
-6. **Deadline:** 7 November, 11:59 PM IST.
+1. **Upload the video** (the 2:44 cut) and paste its link above and into the README's Demo section.
+2. **Publish the post** on Medium and paste the link above and at the end of `docs/POST.md`.
+3. **Post the #HowISwitch text** and paste its link above.
+4. **Deadline:** 7 November, 11:59 PM IST.
 
 ## YouTube upload
 
