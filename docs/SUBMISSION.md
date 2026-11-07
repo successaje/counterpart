@@ -10,8 +10,11 @@ Counterpart: support where both sides bring an agent
 
 ### Tracks you are submitting for
 
-- Track 01, Best Business Workflow
-- Side track, Best Blog
+The field offers three: Best Business Workflow, Best Personal or Creative Workflow, Best Core Contribution. Tick one:
+
+- Best Business Workflow
+
+Counterpart is a support workflow between a project and its users, which is Track 1's brief. It is not a personal or creative project, and there is no pull request to Switch's core, so the other two would only dilute it. Best Blog is a side track; it is entered through the blog-post field in Track Details, not here.
 
 ### Project description
 
@@ -33,9 +36,9 @@ https://github.com/successaje/counterpart
 
 ### Demo video
 
-[YouTube or Loom link, public or unlisted]
+[YouTube link]
 
-> The form says "keep it under 3 minutes". The current cut is 3 minutes 22 seconds. See the note at the end.
+> The form says "keep it under 3 minutes". Upload `counterpart_demo_new_vo_3min.mp4` from Downloads (2:44). The YouTube title, description and settings are at the end of this file.
 
 ### Live demo or deployment
 
@@ -104,9 +107,42 @@ I stood up Switch on my own machine, sent both templates to its validator, and g
 
 ## Before you press submit
 
-1. **Video length.** The form says under 3 minutes. The current cut is 3:22, so a scene has to go, or the cut has to be tightened, before upload.
+1. **Video.** Upload the 2:44 cut, then paste its link above.
 2. **Public repository.** The form requires it for Track 1.
 3. **Upload the video** and paste its link above and into the README's Demo section.
 4. **Publish the post** on Medium and paste the link above and at the end of `docs/POST.md`.
 5. **Post the #HowISwitch text** and paste its link above.
 6. **Deadline:** 7 November, 11:59 PM IST.
+
+## YouTube upload
+
+**File.** `~/Downloads/counterpart_demo_new_vo_3min.mp4` (2:44, 1280×720).
+
+**Title.**
+
+Counterpart: support where both sides bring an agent (Flip the Switch hackathon demo)
+
+**Description.**
+
+A dependency bug, reported and worked around in minutes, between two people who never hand over their machines.
+
+Counterpart puts a project's helpdesk and the reporter's own agent in one Switch room. The helpdesk may ask for six kinds of evidence, by code: versions, config, a named command, a reproduction in a sandbox with no network, the recent diff, a patch to try. Every request that would run something stops at the Desk, a page on the reporter's laptop, and runs only when they allow it. Output is redacted on their machine before it leaves, and the Desk shows what was removed, in place. Anything outside the menu is refused and written down. In this demo the helpdesk asks for ~/.aws/credentials, and the reporter's agent says no.
+
+Built on SandboxAQ's Switch for the WeMakeDevs Flip the Switch hackathon, 4–7 November 2026.
+
+Code (Apache-2.0): https://github.com/successaje/counterpart
+Write-up: [Medium link]
+Switch: https://github.com/sandbox-quantum/switch
+
+Chapters:
+0:00 Both sides bring an agent
+0:14 The bug
+0:29 The support room
+0:54 The Desk: allow once
+1:08 What was removed, in place
+1:24 The helpdesk reproduces and sends a patch
+1:58 The hostile request, refused
+2:10 The ledger and the case timeline
+2:28 Nothing leaves without you
+
+**Settings.** Visibility: Unlisted (the form accepts public or unlisted; unlisted keeps it out of search until you decide). Audience: not made for kids. Category: Science & Technology. Tags: Switch, SandboxAQ, WeMakeDevs, hackathon, AI agents, MCP, Claude Code, developer tools, open source. Comments: on. Thumbnail: the title frame (any frame from the first 3 seconds).
