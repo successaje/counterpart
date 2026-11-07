@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Terminal</title>
+    <link rel="stylesheet" href="scene.css" />
+    <style>
+      body { background: #e9e6de; }
+      .win { position: absolute; left: 90px; top: 70px; width: 1100px; height: 560px; border-radius: 12px; overflow: hidden;
+        background: #1b1a17; color: #e8e4da; box-shadow: 0 30px 60px rgb(27 26 23 / 0.28); }
+      .bar { height: 40px; background: #2a2823; display: flex; align-items: center; padding: 0 16px; gap: 8px; color: #928d82; font-size: 14px; }
+      .dot { width: 12px; height: 12px; border-radius: 50%; background: #5a564d; }
+      .bar .t { margin-left: auto; margin-right: auto; }
+      pre { margin: 0; padding: 22px 28px; font-size: 17px; line-height: 1.5; white-space: pre-wrap; }
+      .p { color: #8fd3a8; }
+      .ok { color: #8fd3a8; }
+      .bad { color: #ef8b7b; }
+      .dim { color: #928d82; }
+      .l { display: none; }
+      .l.on { display: block; }
+      .cursor { display: inline-block; width: 9px; height: 19px; background: #e8e4da; vertical-align: -3px; animation: blink 1s steps(1) infinite; }
+      @keyframes blink { 50% { opacity: 0; } }
+    </style>
+  </head>
+  <body>
+    <div class="win">
+      <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="t">sample-app — zsh</span></div>
+      <pre class="mono" id="out"><span class="l on"><span class="p">~/code/sample-app</span> $ <span id="typed"></span><span class="cursor" id="cur"></span></span>
+<span class="l"></span>
+<span class="l"><span class="dim">> sample-app@1.4.0 test</span></span>
+<span class="l"><span class="dim">> vitest run</span></span>
+<span class="l"></span>
+<span class="l"> RUN  v3.2.7 /Users/alice/code/sample-app</span>
+<span class="l"></span>
+<span class="l"> ❯ test/cache.test.ts (3 tests | <span class="bad">2 failed</span>) 10ms</span>
+<span class="l">   <span class="ok">✓</span> app cache > warms the cache 5ms</span>
+<span class="l">   <span class="bad">×</span> app cache > restores from s3 3ms</span>
+<span class="l">     <span class="bad">→ ENOENT: no such file or directory, open '/Users/alice/code/sample-app/.cache/cachekit/index.json'</span></span>
+<span class="l">   <span class="bad">×</span> app cache > evicts expired entries 1ms</span>
+<span class="l">     <span class="bad">→ ENOENT: no such file or directory, open '/Users/alice/code/sample-app/.cache/cachekit/index.json'</span></span>
+<span class="l"></span>
+<span class="l"> <span class="bad">FAIL</span>  test/cache.test.ts > app cache > restores from s3</span>
+<span class="l"> ❯ CacheKitS3.restore ../cachekit-s3/src/index.ts:52:30</span>
+<span class="l">     <span class="dim">52|     const index = JSON.parse(await readFile(local, 'utf8'))</span></span>
+<span class="l"></span>
+<span class="l"> Test Files  <span class="bad">1 failed</span> (1)</span>
+<span class="l">      Tests  <span class="bad">2 failed</span> | <span class="ok">1 passed</span> (3)</span>
+<span class="l"></span>
+<span class="l"><span class="p">~/code/sample-app</span> $ <span class="cursor"></span></span></pre>
+    </div>
+    <div id="caption"></div>
+    <script>
+      const lines = [...document.querySelectorAll('.l')];
+      window.typeCommand = async (text) => {
+        const el = document.getElementById('typed');
+        for (const ch of text) { el.textContent += ch; await new Promise((r) => setTimeout(r, 55 + Math.random() * 60)); }
+        await new Promise((r) => setTimeout(r, 350));
+        document.getElementById('cur').style.display = 'none';
+      };
+      window.showLines = async (upto, delay = 60) => {
+        for (let i = 1; i <= upto; i++) {
+          if (!lines[i].classList.contains('on')) { lines[i].classList.add('on'); await new Promise((r) => setTimeout(r, delay)); }
+        }
+      };
+    </script>
+  </body>
+</html>

@@ -23,3 +23,4 @@ Milestones, newest last. Dates are in IST.
 | 2026-11-01 | Site: social image, meta tags, documentation links. (PR #27) |
 | 2026-11-01 | Dependabot's seven green bumps merged; the four majors closed by config. |
 | 2026-11-07 | The Switch integration, inside the window: `switch/` with the support-room and dev-agent templates in Switch's template language, both briefs, the evidence-protocol and case-ledger room documents, a pinned self-host overlay, `counterpart init` writing `.mcp.json`, and the support room simulated against the real MCP server in CI. The simulation found a redaction gap (macOS per-user temp paths), fixed in the protocol. |
+| 2026-11-07 | The demo video, rendered by `pnpm demo:video`: nine scenes, the Desk live against the sample app, the room replayed, narrated and assembled into `release/demo.mp4`. |

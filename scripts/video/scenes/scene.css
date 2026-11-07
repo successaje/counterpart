@@ -1,0 +1,77 @@
+/* Shared look for the demo video's rendered scenes: the site's tokens. */
+:root {
+  --paper: #f6f4ee;
+  --surface: #fffefb;
+  --sunken: #efece4;
+  --ink: #1b1a17;
+  --muted: #625e55;
+  --faint: #928d82;
+  --line: #c9c3b6;
+  --accent: #1f6f4a;
+  --accent-soft: #e2efe7;
+  --pending: #a8630b;
+  --pending-soft: #f6e9d6;
+  --danger: #a63d2f;
+  --danger-soft: #f5e1dd;
+  --info: #2b5c8a;
+  --info-soft: #e0eaf4;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.mono {
+  font-family: "IBM Plex Mono", Menlo, monospace;
+}
+.mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  background: conic-gradient(from 180deg, var(--ink) 0 50%, var(--accent) 50% 100%);
+}
+
+/* The caption bar every scene shares; the recorder sets its text. */
+#caption {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px 40px 18px;
+  background: linear-gradient(to top, rgb(27 26 23 / 0.92), rgb(27 26 23 / 0.85));
+  color: #f6f4ee;
+  font-size: 22px;
+  line-height: 1.35;
+  text-align: center;
+  min-height: 64px;
+  letter-spacing: 0.005em;
+  z-index: 1000;
+  pointer-events: none;
+}
+#caption:empty {
+  display: none;
+}
+
+/* Things that appear on cue. */
+.cue {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 320ms ease,
+    transform 320ms ease;
+}
+.cue.on {
+  opacity: 1;
+  transform: none;
+}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Counterpart</title>
+    <link rel="stylesheet" href="scene.css" />
+    <style>
+      .frame { padding: 110px 120px; }
+      .brand { display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 30px; }
+      h1 { margin: 44px 0 20px; font-size: 68px; line-height: 1.02; letter-spacing: -0.025em; font-weight: 600; max-width: 15ch; }
+      p { margin: 0; font-size: 26px; line-height: 1.4; color: var(--muted); max-width: 34ch; }
+      .pill { position: absolute; left: 120px; bottom: 120px; display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; border-radius: 6px;
+        background: var(--accent-soft); color: var(--accent); font-size: 19px; font-weight: 500; letter-spacing: 0.02em; }
+      .pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+      .hack { position: absolute; right: 120px; bottom: 120px; color: var(--faint); font-size: 18px; text-align: right; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <div class="brand cue" id="c1"><span class="mark"></span> Counterpart</div>
+      <h1 class="cue" id="c2">Support where both sides bring an agent.</h1>
+      <p class="cue" id="c3">Evidence collected on your machine, under your approval, redacted before it leaves. Built on Switch.</p>
+      <div class="pill cue" id="c4">nothing leaves without you</div>
+      <div class="hack cue" id="c5">Flip the Switch · WeMakeDevs · November 2026<br />github.com/successaje/counterpart</div>
+    </div>
+    <div id="caption"></div>
+    <script>
+      window.show = (ids) => { for (const id of ids) document.getElementById(id).classList.add('on'); };
+    </script>
+  </body>
+</html>
